@@ -2,8 +2,9 @@ let isUserRegistered = false;
 let pendingTabId = null;
 let pendingButton = null;
 
+// Логіка перемикання вкладок
 function handleTabClick(btnElement, tabId) {
-    if (!isUserRegistered) {
+    if (!isUserRegistered && tabId !== 'dashboard-tab') {
         pendingTabId = tabId;
         pendingButton = btnElement;
         document.getElementById('auth-modal').style.display = 'flex';
@@ -23,7 +24,7 @@ function openTab(btnElement, tabId) {
     btnElement.classList.add('active');
 }
 
-// РЕЄСТРАЦІЯ
+// Реєстрація
 document.getElementById('registration-form').addEventListener('submit', function(event) {
     event.preventDefault(); 
 
@@ -32,17 +33,17 @@ document.getElementById('registration-form').addEventListener('submit', function
     const errorSpan = document.getElementById('email-error');
 
     if (!email.includes('@') || !email.includes('.')) {
-        errorSpan.textContent = "Please enter a valid email address with '@' and '.'";
+        errorSpan.textContent = "INVALID LINK CREDENTIALS";
         errorSpan.style.display = "block";
         return; 
     }
 
     errorSpan.style.display = "none";
-    document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
     
-    // Після реєстрації показуємо кнопку Settings
-    document.getElementById('settings-btn').style.display = 'inline-block';
-
+    // Оновлюємо ім'я у всіх місцях
+    document.getElementById('sidebar-player-display').innerHTML = `Player : <strong>${nickname}</strong>`;
+    document.getElementById('main-player-name').textContent = nickname;
+    
     document.getElementById('auth-modal').style.display = 'none';
     isUserRegistered = true;
 
@@ -51,82 +52,29 @@ document.getElementById('registration-form').addEventListener('submit', function
     }
 });
 
-// Закриття реєстрації при кліку поза вікном
+// Закриття модалки по кліку на фон
 const modalOverlay = document.getElementById('auth-modal');
 modalOverlay.addEventListener('click', function(event) {
-    if (!event.target.closest('.modal-box')) {
+    if (!event.target.closest('.glass-modal')) {
         modalOverlay.style.display = 'none';
         pendingTabId = null;
         pendingButton = null;
     }
 });
 
-// --- НАЛАШТУВАННЯ ПРОФІЛУ ---
-
-function openSettings() {
-    document.getElementById('right-sidebar').classList.add('open');
-}
-
-function closeSettings() {
-    document.getElementById('right-sidebar').classList.remove('open');
-    document.getElementById('settings-error').style.display = 'none';
-    document.getElementById('change-nickname').value = '';
-    document.getElementById('change-password').value = '';
-    document.getElementById('confirm-password').value = '';
-    document.getElementById('photo-upload').value = '';
-    
-    // Скидання тексту назви файлу
-    const fileNameDisplay = document.getElementById('file-name-display');
-    if (fileNameDisplay) {
-        fileNameDisplay.textContent = "No file chosen";
-        fileNameDisplay.style.color = "#888";
-    }
-}
-
-function saveSettings() {
-    const newNickname = document.getElementById('change-nickname').value;
-    const newPassword = document.getElementById('change-password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
-    const photoUpload = document.getElementById('photo-upload');
-    const errorSpan = document.getElementById('settings-error');
-
-    errorSpan.style.display = 'none';
-
-    // Перевірка паролів
-    if (newPassword !== "" || confirmPassword !== "") {
-        if (newPassword !== confirmPassword) {
-            errorSpan.textContent = "Passwords do not match!";
-            errorSpan.style.display = "block";
-            return; 
-        }
-    }
-
-    // Зміна нікнейму
-    if (newNickname.trim() !== "") {
-        document.getElementById('player-display').innerHTML = `Player: <strong>${newNickname}</strong>`;
-    }
-
-    // Зміна фото профілю
-    if (photoUpload.files && photoUpload.files[0]) {
+// Завантаження Аватара прямо на Дашборді
+document.getElementById('dashboard-photo-upload').addEventListener('change', function(event) {
+    if (event.target.files && event.target.files[0]) {
         const reader = new FileReader();
+        
         reader.onload = function(e) {
-            document.getElementById('player-photo').src = e.target.result;
+            // Змінюємо головне фото
+            document.getElementById('main-avatar').src = e.target.result;
+            
+            // Якщо захочеш додати міні-фото в ліве меню, можна розкоментувати:
+            // document.getElementById('sidebar-avatar').src = e.target.result;
         }
-        reader.readAsDataURL(photoUpload.files[0]);
-    }
-
-    closeSettings();
-}
-
-// Оновлення тексту при виборі файлу
-document.getElementById('photo-upload').addEventListener('change', function(event) {
-    const fileNameDisplay = document.getElementById('file-name-display');
-    
-    if (event.target.files.length > 0) {
-        fileNameDisplay.textContent = event.target.files[0].name;
-        fileNameDisplay.style.color = "#ece8e1"; 
-    } else {
-        fileNameDisplay.textContent = "No file chosen";
-        fileNameDisplay.style.color = "#888";
+        
+        reader.readAsDataURL(event.target.files[0]);
     }
 });
