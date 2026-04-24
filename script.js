@@ -14,7 +14,7 @@ function handleTabClick(btnElement, tabId) {
     openTab(btnElement, tabId);
 }
 
-// Функція відкриття вкладок (тільки візуальна частина)
+// Функція відкриття вкладок
 function openTab(btnElement, tabId) {
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active-tab'));
@@ -43,8 +43,8 @@ document.getElementById('registration-form').addEventListener('submit', function
     errorSpan.style.display = "none";
     document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
     
-    // Якщо реєстрація успішна - міняємо іконку профілю
-    document.getElementById('player-photo').src = "photo.jpg"; 
+    // Оновлений шлях до фото (через папку img)
+    document.getElementById('player-photo').src = "img/photo.jpg"; 
 
     document.getElementById('auth-modal').style.display = 'none';
     isUserRegistered = true;
@@ -54,16 +54,12 @@ document.getElementById('registration-form').addEventListener('submit', function
     }
 });
 
-// ЗАКРИТТЯ ВІКНА ПРИ КЛІКУ ПОЗА НИМ
+// Закриття модального вікна при кліку поза ним
 const modalOverlay = document.getElementById('auth-modal');
 
 modalOverlay.addEventListener('click', function(event) {
-    // Перевіряємо, чи клік був безпосередньо по темному фону (overlay), 
-    // і чи НЕ був він по самій формі (.modal-box) або всередині неї.
     if (!event.target.closest('.modal-box')) {
         modalOverlay.style.display = 'none';
-        
-        // Очищаємо дані, щоб користувач не перейшов на вкладку випадково
         pendingTabId = null;
         pendingButton = null;
     }
