@@ -14,32 +14,66 @@
             </div>
             
             <div class="user-profile">
-                <span>Player: <strong>Nick</strong></span>
+                <span id="player-display">Player: <strong>Guest</strong></span>
             </div>
 
             <nav class="menu">
-                <button class="menu-btn active" onclick="openTab(event, 'cs-tab')">
-                    <img src="cs-icon.png" alt="CS" class="icon"> 
+                <button class="menu-btn" onclick="handleTabClick(this, 'cs-tab')">
+                    <div class="icon-placeholder">CS</div> 
                     Counter-Strike
                 </button>
-                <button class="menu-btn" onclick="openTab(event, 'val-tab')">
-                    <img src="val-icon.png" alt="Valorant" class="icon"> 
+                <button class="menu-btn" onclick="handleTabClick(this, 'val-tab')">
+                    <div class="icon-placeholder">VAL</div> 
                     Valorant
                 </button>
             </nav>
         </aside>
 
         <main class="content">
-            <section id="cs-tab" class="tab-content active-tab">
+            <section id="welcome-tab" class="tab-content active-tab">
+                <h1>Welcome to Havr`s finding</h1>
+                <p>Please select a game from the menu to get started and find your perfect squad.</p>
+            </section>
+
+            <section id="cs-tab" class="tab-content">
+                <img src="cs.jpg" alt="CS Banner" class="game-banner">
                 <h1>Find Teammates in Counter-Strike</h1>
                 <p>Select your criteria to find the perfect squad for Premier or Faceit matches.</p>
             </section>
 
             <section id="val-tab" class="tab-content">
+                <img src="valorant.jpg" alt="Valorant Banner" class="game-banner">
                 <h1>Find Teammates in Valorant</h1>
                 <p>Search for specific agents like Main Duelist or Initiator to balance your team composition.</p>
             </section>
         </main>
+    </div>
+
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h2>Registration</h2>
+            <p class="modal-subtitle">Join to access game lobbies</p>
+            
+            <form id="registration-form">
+                <div class="input-group">
+                    <label for="nickname">Nickname</label>
+                    <input type="text" id="nickname" placeholder="e.g., Nick" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
+                    <span id="email-error" class="error-text"></span>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Register & Enter</button>
+            </form>
+        </div>
     </div>
 
     <script src="script.js"></script>
