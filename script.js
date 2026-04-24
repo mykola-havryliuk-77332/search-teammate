@@ -61,25 +61,28 @@ modalOverlay.addEventListener('click', function(event) {
     }
 });
 
+// --- НАЛАШТУВАННЯ ПРОФІЛУ ---
 
-// --- НОВА ЛОГІКА ДЛЯ НАЛАШТУВАНЬ ---
-
-// Відкрити/Закрити праве меню
 function openSettings() {
     document.getElementById('right-sidebar').classList.add('open');
 }
 
 function closeSettings() {
     document.getElementById('right-sidebar').classList.remove('open');
-    // Очищаємо поля та помилки при закритті
     document.getElementById('settings-error').style.display = 'none';
     document.getElementById('change-nickname').value = '';
     document.getElementById('change-password').value = '';
     document.getElementById('confirm-password').value = '';
     document.getElementById('photo-upload').value = '';
+    
+    // Скидання тексту назви файлу
+    const fileNameDisplay = document.getElementById('file-name-display');
+    if (fileNameDisplay) {
+        fileNameDisplay.textContent = "No file chosen";
+        fileNameDisplay.style.color = "#888";
+    }
 }
 
-// Збереження налаштувань
 function saveSettings() {
     const newNickname = document.getElementById('change-nickname').value;
     const newPassword = document.getElementById('change-password').value;
@@ -87,37 +90,43 @@ function saveSettings() {
     const photoUpload = document.getElementById('photo-upload');
     const errorSpan = document.getElementById('settings-error');
 
-    errorSpan.style.display = 'none'; // Скидаємо попередню помилку
+    errorSpan.style.display = 'none';
 
-    // 1. Перевірка паролів (якщо користувач щось ввів у ці поля)
+    // Перевірка паролів
     if (newPassword !== "" || confirmPassword !== "") {
         if (newPassword !== confirmPassword) {
             errorSpan.textContent = "Passwords do not match!";
             errorSpan.style.display = "block";
-            return; // Зупиняємо функцію, якщо паролі не збігаються
+            return; 
         }
-        // Тут могла б бути логіка відправки нового пароля на бекенд
     }
 
-    // 2. Зміна нікнейму
+    // Зміна нікнейму
     if (newNickname.trim() !== "") {
         document.getElementById('player-display').innerHTML = `Player: <strong>${newNickname}</strong>`;
     }
 
-    // 3. Зміна фото профілю (читання файлу з комп'ютера)
+    // Зміна фото профілю
     if (photoUpload.files && photoUpload.files[0]) {
         const reader = new FileReader();
-        
-        // Коли файл успішно прочитано
         reader.onload = function(e) {
-            // e.target.result містить картинку у форматі Base64 (Data URL)
             document.getElementById('player-photo').src = e.target.result;
         }
-        
-        // Запускаємо читання обраного файлу
         reader.readAsDataURL(photoUpload.files[0]);
     }
 
-    // Закриваємо панель після успішного збереження
     closeSettings();
 }
+
+// Оновлення тексту при виборі файлу
+document.getElementById('photo-upload').addEventListener('change', function(event) {
+    const fileNameDisplay = document.getElementById('file-name-display');
+    
+    if (event.target.files.length > 0) {
+        fileNameDisplay.textContent = event.target.files[0].name;
+        fileNameDisplay.style.color = "#ece8e1"; 
+    } else {
+        fileNameDisplay.textContent = "No file chosen";
+        fileNameDisplay.style.color = "#888";
+    }
+});
