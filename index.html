@@ -7,109 +7,140 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="bg-effects"></div>
+
     <div class="app-container">
         <aside class="sidebar">
             <div class="logo">
-                <h2>Havr`s finding</h2>
+                <span class="crosshair">⌖</span>
+                <h2>HAVR'S<br>FINDING</h2>
             </div>
             
-            <div class="user-profile">
-                <img src="img/user.jpg" alt="Player Photo" class="profile-photo-icon" id="player-photo">
-                <span id="player-display">Player: <strong>Guest</strong></span>
-                <button id="settings-btn" class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
+            <div class="user-mini-profile">
+                <span id="sidebar-player-display">Player : <strong>Guest</strong></span>
             </div>
 
             <nav class="menu">
-                <button class="menu-btn" onclick="handleTabClick(this, 'cs-tab')">
-                    <img src="img/cs.jpg" alt="CS Icon" class="game-icon"> 
-                    Counter-Strike
+                <button class="menu-btn active" onclick="handleTabClick(this, 'dashboard-tab')">
+                    <span class="menu-icon">⊞</span> Dashboard
                 </button>
-                <button class="menu-btn" onclick="handleTabClick(this, 'val-tab')">
-                    <img src="img/valorant.jpg" alt="VAL Icon" class="game-icon"> 
-                    Valorant
+                <button class="menu-btn cs-btn" onclick="handleTabClick(this, 'cs-tab')">
+                    <img src="img/cs.jpg" alt="CS" class="game-icon"> Counter-Strike
+                </button>
+                <button class="menu-btn val-btn" onclick="handleTabClick(this, 'val-tab')">
+                    <img src="img/valorant.jpg" alt="VAL" class="game-icon"> Valorant
                 </button>
             </nav>
         </aside>
 
         <main class="content">
-            <section id="welcome-tab" class="tab-content active-tab">
-                <h1>Welcome to Havr`s finding</h1>
-                <p>Please select a game from the menu to get started and find your perfect squad.</p>
+            <header class="main-header">
+                <h1>HAVR'S FINDING</h1>
+                <p>SELECT GAME TO START FINDING YOUR PERFECT SQUAD</p>
+            </header>
+
+            <section id="dashboard-tab" class="tab-content active-tab">
+                <div class="dashboard-grid">
+                    
+                    <div class="glass-card profile-section">
+                        <h3>PROFILE</h3>
+                        <div class="profile-content">
+                            <div class="avatar-wrapper">
+                                <img src="img/user.jpg" alt="Avatar" id="main-avatar" class="main-avatar">
+                                <div class="player-info">
+                                    <span class="label">PLAYER:</span>
+                                    <strong id="main-player-name">Guest</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-actions">
+                                <p class="status-text">AVATAR (Custom)</p>
+                                <div class="custom-file-upload neon-upload">
+                                    <input type="file" id="dashboard-photo-upload" accept="image/*" hidden>
+                                    <label for="dashboard-photo-upload" class="upload-btn">
+                                        UPLOAD AVATAR <span>👤</span>
+                                    </label>
+                                </div>
+                                <button class="secondary-btn">SELECT YOUR ROLE <span>⌄</span></button>
+                                <button class="secondary-btn disabled">LINK ACCOUNTS (Coming Soon) <span>🔗</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card recent-squads">
+                        <h3>RECENT SQUADS</h3>
+                        <ul class="squad-list">
+                            <li><span class="user-icon">👤</span> Player_1 <span class="rank">N/A</span></li>
+                            <li><span class="user-icon">👤</span> Player_2 <span class="rank">N/A</span></li>
+                            <li><span class="user-icon">👤</span> Player_3 <span class="rank">N/A</span></li>
+                            <li><span class="user-icon">👤</span> Player_4 <span class="rank">N/A</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card quick-start">
+                        <h3>QUICK START: SELECT YOUR GAME</h3>
+                        <div class="game-cards-container">
+                            <div class="game-card" onclick="document.querySelector('.cs-btn').click()">
+                                <img src="img/cs.jpg" alt="CS">
+                                <div class="card-info">
+                                    <h4>COUNTER-STRIKE</h4>
+                                    <p>Active Lobbies: N/A</p>
+                                </div>
+                            </div>
+                            <div class="game-card" onclick="document.querySelector('.val-btn').click()">
+                                <img src="img/valorant.jpg" alt="Valorant">
+                                <div class="card-info">
+                                    <h4>VALORANT</h4>
+                                    <p>Active Lobbies: N/A</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </section>
 
             <section id="cs-tab" class="tab-content">
-                <img src="img/cs.jpg" alt="CS Banner" class="game-banner">
-                <h1>Find Teammates in Counter-Strike</h1>
-                <p>Select your criteria to find the perfect squad for Premier or Faceit matches.</p>
+                <div class="glass-card">
+                    <img src="img/cs.jpg" alt="CS Banner" class="game-banner">
+                    <h2>Counter-Strike Matchmaking</h2>
+                    <p>Lobby system coming soon...</p>
+                </div>
             </section>
 
             <section id="val-tab" class="tab-content">
-                <img src="img/valorant.jpg" alt="Valorant Banner" class="game-banner">
-                <h1>Find Teammates in Valorant</h1>
-                <p>Search for specific agents like Main Duelist or Initiator to balance your team composition.</p>
+                <div class="glass-card">
+                    <img src="img/valorant.jpg" alt="Valorant Banner" class="game-banner">
+                    <h2>Valorant Matchmaking</h2>
+                    <p>Lobby system coming soon...</p>
+                </div>
             </section>
         </main>
     </div>
 
-    <aside class="right-sidebar" id="right-sidebar">
-        <div class="sidebar-header">
-            <h3>Profile Settings</h3>
-            <button class="close-btn" onclick="closeSettings()">✕</button>
-        </div>
-        
-        <div class="settings-content">
-            <div class="input-group">
-                <label>Upload Avatar</label>
-                <div class="custom-file-upload">
-                    <input type="file" id="photo-upload" accept="image/*" hidden>
-                    <label for="photo-upload" class="custom-file-btn">Choose File</label>
-                    <span id="file-name-display" class="file-name-text">No file chosen</span>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label for="change-nickname">New Nickname</label>
-                <input type="text" id="change-nickname" placeholder="Enter new nickname">
-            </div>
-
-            <div class="input-group">
-                <label for="change-password">New Password</label>
-                <input type="password" id="change-password" placeholder="••••••••">
-            </div>
-
-            <div class="input-group">
-                <label for="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm-password" placeholder="••••••••">
-                <span id="settings-error" class="error-text"></span>
-            </div>
-
-            <button class="submit-btn" onclick="saveSettings()">Save Changes</button>
-        </div>
-    </aside>
-
     <div id="auth-modal" class="modal-overlay">
-        <div class="modal-box">
-            <h2>Registration</h2>
-            <p class="modal-subtitle">Join to access game lobbies</p>
+        <div class="glass-modal">
+            <div class="modal-header">
+                <span class="crosshair">⌖</span>
+                <h2>INITIALIZE LINK</h2>
+            </div>
+            <p class="modal-subtitle">Join the network to access lobbies</p>
             
             <form id="registration-form">
                 <div class="input-group">
-                    <label for="nickname">Nickname</label>
+                    <label>NICKNAME</label>
                     <input type="text" id="nickname" placeholder="e.g., Nick" required>
                 </div>
-                
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="example@mail.com" required>
+                    <label>EMAIL</label>
+                    <input type="email" id="email" placeholder="agent@network.com" required>
                     <span id="email-error" class="error-text"></span>
                 </div>
-
                 <div class="input-group">
-                    <label for="password">Password</label>
+                    <label>PASSWORD</label>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
-
-                <button type="submit" class="submit-btn">Register & Enter</button>
+                <button type="submit" class="submit-btn neon-btn">CONNECT</button>
             </form>
         </div>
     </div>
