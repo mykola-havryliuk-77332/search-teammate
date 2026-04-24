@@ -59,8 +59,12 @@
         
         <div class="settings-content">
             <div class="input-group">
-                <label for="photo-upload">Upload Avatar</label>
-                <input type="file" id="photo-upload" accept="image/*">
+                <label>Upload Avatar</label>
+                <div class="custom-file-upload">
+                    <input type="file" id="photo-upload" accept="image/*" hidden>
+                    <label for="photo-upload" class="custom-file-btn">Choose File</label>
+                    <span id="file-name-display" class="file-name-text">No file chosen</span>
+                </div>
             </div>
 
             <div class="input-group">
