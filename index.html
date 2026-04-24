@@ -14,8 +14,9 @@
             </div>
             
             <div class="user-profile">
-                <img src="img/photo.jpg" alt="Player Photo" class="profile-photo-icon" id="player-photo">
+                <img src="img/user.jpg" alt="Player Photo" class="profile-photo-icon" id="player-photo">
                 <span id="player-display">Player: <strong>Guest</strong></span>
+                <button id="settings-btn" class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
             </div>
 
             <nav class="menu">
@@ -49,6 +50,38 @@
             </section>
         </main>
     </div>
+
+    <aside class="right-sidebar" id="right-sidebar">
+        <div class="sidebar-header">
+            <h3>Profile Settings</h3>
+            <button class="close-btn" onclick="closeSettings()">✕</button>
+        </div>
+        
+        <div class="settings-content">
+            <div class="input-group">
+                <label for="photo-upload">Upload Avatar</label>
+                <input type="file" id="photo-upload" accept="image/*">
+            </div>
+
+            <div class="input-group">
+                <label for="change-nickname">New Nickname</label>
+                <input type="text" id="change-nickname" placeholder="Enter new nickname">
+            </div>
+
+            <div class="input-group">
+                <label for="change-password">New Password</label>
+                <input type="password" id="change-password" placeholder="••••••••">
+            </div>
+
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" placeholder="••••••••">
+                <span id="settings-error" class="error-text"></span>
+            </div>
+
+            <button class="submit-btn" onclick="saveSettings()">Save Changes</button>
+        </div>
+    </aside>
 
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-box">
