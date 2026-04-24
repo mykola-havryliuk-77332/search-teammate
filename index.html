@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Havr`s finding</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Havr`s finding</h2>
+            </div>
+            
+            <div class="user-profile">
+                <span>Player: <strong>Nick</strong></span>
+            </div>
+
+            <nav class="menu">
+                <button class="menu-btn active" onclick="openTab(event, 'cs-tab')">
+                    <img src="cs-icon.png" alt="CS" class="icon"> 
+                    Counter-Strike
+                </button>
+                <button class="menu-btn" onclick="openTab(event, 'val-tab')">
+                    <img src="val-icon.png" alt="Valorant" class="icon"> 
+                    Valorant
+                </button>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <section id="cs-tab" class="tab-content active-tab">
+                <h1>Find Teammates in Counter-Strike</h1>
+                <p>Select your criteria to find the perfect squad for Premier or Faceit matches.</p>
+            </section>
+
+            <section id="val-tab" class="tab-content">
+                <h1>Find Teammates in Valorant</h1>
+                <p>Search for specific agents like Main Duelist or Initiator to balance your team composition.</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
