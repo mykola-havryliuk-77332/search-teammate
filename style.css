@@ -8,7 +8,7 @@
     --neon-blue: #00e5ff;
     --neon-red: #ff4655;
     --neon-red-hover: #ff2a3b;
-    --glass-background: rgba(20, 20, 30, 0.6);
+    --glass-background: rgba(20, 20, 30, 0.7);
 }
 
 * {
@@ -24,7 +24,7 @@ body {
     overflow: hidden;
 }
 
-/* --- ФОНОВІ ЕФЕКТИ (СІТКА ТА ГРАДІЄНТИ) --- */
+/* ФОНОВІ ЕФЕКТИ */
 .main-canvas {
     position: relative;
     width: 100vw;
@@ -33,18 +33,26 @@ body {
 
 .bg-effects {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle at 10% 40%, rgba(0, 229, 255, 0.05), transparent 30%),
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 40%, rgba(0, 229, 255, 0.05), transparent 30%), 
                 radial-gradient(circle at 90% 20%, rgba(255, 70, 85, 0.05), transparent 30%);
+    z-index: 1;
 }
 
 .grid-overlay {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), 
                       linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
     opacity: 0.5;
+    z-index: 2;
 }
 
 .app-container {
@@ -54,7 +62,7 @@ body {
     z-index: 10;
 }
 
-/* --- БІЧНА ПАНЕЛЬ --- */
+/* ЛІВЕ МЕНЮ */
 .sidebar {
     width: 280px;
     background-color: var(--panel-dark);
@@ -72,20 +80,33 @@ body {
 }
 
 .crosshair-icon {
-    width: 28px; height: 28px;
+    width: 28px;
+    height: 28px;
     border: 3px solid #fff;
     border-radius: 50%;
     position: relative;
 }
 
-.crosshair-icon::before, .crosshair-icon::after {
+.crosshair-icon::before, 
+.crosshair-icon::after {
     content: '';
     position: absolute;
     background-color: #fff;
 }
 
-.crosshair-icon::before { top: 12px; left: -10px; width: 42px; height: 3px; }
-.crosshair-icon::after { top: -10px; left: 12px; width: 3px; height: 42px; }
+.crosshair-icon::before {
+    top: 11px;
+    left: -8px;
+    width: 38px;
+    height: 2px;
+}
+
+.crosshair-icon::after {
+    top: -8px;
+    left: 11px;
+    width: 2px;
+    height: 38px;
+}
 
 .logo h2 {
     font-size: 24px;
@@ -94,31 +115,75 @@ body {
     line-height: 1.1;
 }
 
+/* ПРОФІЛЬ В МЕНЮ */
 .user-mini-profile {
-    color: var(--text-secondary);
-    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
     margin-bottom: 40px;
-    padding-left: 10px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.user-mini-profile strong {
+.profile-photo-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--text-secondary);
+}
+
+.profile-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-text span {
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+.profile-text strong {
     color: #fff;
 }
 
+.settings-btn {
+    display: none;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 5px;
+    transition: 0.3s;
+    width: fit-content;
+}
+
+.settings-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: var(--neon-red);
+}
+
+/* КНОПКИ МЕНЮ */
 .menu {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .menu-btn {
     background: none;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     color: var(--text-secondary);
-    padding: 15px 20px;
+    padding: 12px 15px;
     border-radius: 8px;
     text-align: left;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -127,40 +192,51 @@ body {
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
-    border: 1px solid transparent;
 }
 
 .menu-btn:hover {
     color: #fff;
-    background-color: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .btn-glow {
     position: absolute;
-    top: 0; left: 0; width: 4px; height: 100%;
-    transition: background 0.3s, box-shadow 0.3s;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    transition: 0.3s;
 }
 
-.menu-btn.cs-btn:hover .btn-glow { background: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
-.menu-btn.val-btn:hover .btn-glow { background: var(--neon-red); box-shadow: 0 0 15px var(--neon-red); }
+.menu-btn.cs-btn:hover .btn-glow {
+    background: var(--neon-blue);
+    box-shadow: 0 0 15px var(--neon-blue);
+}
+
+.menu-btn.val-btn:hover .btn-glow {
+    background: var(--neon-red);
+    box-shadow: 0 0 15px var(--neon-red);
+}
 
 .menu-btn.active {
     color: #fff;
-    background-color: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.menu-btn.active .btn-glow {
+    background: #fff;
 }
 
 .game-icon {
-    width: 32px; height: 32px;
-    background-size: cover;
+    width: 28px;
+    height: 28px;
     border-radius: 4px;
+    object-fit: cover;
 }
 
-.cs-icon { background-image: url('img/cs.jpg'); }
-.val-icon { background-image: url('img/valorant.jpg'); }
-
-/* --- ОСНОВНИЙ КОНТЕНТ --- */
+/* ОСНОВНИЙ КОНТЕНТ */
 .content {
     flex: 1;
     padding: 50px 60px;
@@ -184,15 +260,15 @@ body {
     font-size: 16px;
 }
 
-/* --- "СКЛЯНІ" ПАНЕЛІ (Glassmorphism) --- */
+/* СКЛЯНІ ПАНЕЛІ */
 .glass-panel {
     background: var(--glass-background);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 30px;
     margin-bottom: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .tab-content h2 {
@@ -210,77 +286,233 @@ body {
     gap: 30px;
 }
 
-.avatar-placeholder {
-    width: 100px; height: 100px;
-    background-color: #252529;
+.main-avatar-large {
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    border: 3px solid rgba(255, 255, 255, 0.1);
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.2);
 }
 
-.avatar-icon {
-    width: 40px; height: 40px;
-    background-color: #555;
-    border-radius: 50%;
-}
-
-.profile-info h3 { font-size: 24px; color: #fff; }
-.profile-info p { color: var(--text-secondary); margin-bottom: 15px; font-size: 14px; }
-
-.upload-btn {
-    background: none;
-    border: 1px solid #ff00ff;
+.profile-info h3 {
+    font-size: 24px;
     color: #fff;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
+}
+
+.profile-info p {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
     font-size: 14px;
-    letter-spacing: 1px;
-    transition: all 0.3s;
 }
 
-.upload-btn:hover {
-    background-color: #ff00ff;
-    box-shadow: 0 0 15px #ff00ff;
+.game-banner {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- МОДАЛЬНЕ ВІКНО --- */
+/* МОДАЛЬНЕ ВІКНО */
 .modal-overlay {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
-    z-index: 1000; justify-content: center; align-items: center;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-box {
-    width: 100%; max-width: 400px;
+    width: 100%;
+    max-width: 400px;
     padding: 40px;
 }
 
-.modal-header h2 { text-align: center; font-size: 28px; letter-spacing: 2px; color: #fff; }
-.modal-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 30px; }
-
-.input-group { margin-bottom: 20px; display: flex; flex-direction: column; }
-.input-group label { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 1px; }
-.input-group input {
-    padding: 12px 15px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff; border-radius: 4px; font-size: 16px; outline: none; transition: 0.3s;
+.modal-header h2 {
+    text-align: center;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 5px;
+    border: none;
+    padding: 0;
 }
-.input-group input:focus { border-color: var(--neon-red); box-shadow: 0 0 10px rgba(255, 70, 85, 0.2); }
 
-.error-text { color: var(--neon-red); font-size: 12px; margin-top: 5px; display: none; }
+.modal-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+/* ІНПУТИ ТА КНОПКИ */
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.input-group input {
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--neon-red);
+    box-shadow: 0 0 10px rgba(255, 70, 85, 0.2);
+}
+
+.error-text {
+    color: var(--neon-red);
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
 
 .submit-btn {
-    width: 100%; padding: 15px; background: var(--neon-red); color: #fff; border: none;
-    border-radius: 4px; font-size: 18px; font-weight: bold; letter-spacing: 2px;
-    cursor: pointer; transition: 0.3s; margin-top: 10px;
+    width: 100%;
+    padding: 15px;
+    background: var(--neon-red);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+    text-transform: uppercase;
 }
-.submit-btn:hover { background: var(--neon-red-hover); box-shadow: 0 0 20px rgba(255, 70, 85, 0.5); }
 
-/* --- ЛОГІКА ВКЛАДОК --- */
-.tab-content { display: none; animation: fadeIn 0.4s ease; }
-.tab-content.active-tab { display: block; }
+.submit-btn:hover {
+    background: var(--neon-red-hover);
+    box-shadow: 0 0 20px rgba(255, 70, 85, 0.5);
+}
+
+/* ПРАВЕ ВИЇЗНЕ МЕНЮ НАЛАШТУВАНЬ */
+.right-sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 320px;
+    height: 100vh;
+    background-color: var(--panel-dark);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    transition: right 0.4s ease-in-out;
+    z-index: 900;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.right-sidebar.open {
+    right: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+}
+
+.sidebar-header h3 {
+    color: #fff;
+    font-size: 18px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-btn:hover {
+    color: var(--neon-red);
+}
+
+/* КАСТОМНЕ ЗАВАНТАЖЕННЯ ФАЙЛУ */
+.custom-file-upload {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-file-btn {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.custom-file-btn:hover {
+    border-color: var(--neon-red);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.file-name-text {
+    color: var(--text-secondary);
+    font-size: 13px;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+}
+
+/* ЛОГІКА ВКЛАДОК */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active-tab {
+    display: block;
+}
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
