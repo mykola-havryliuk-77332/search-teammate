@@ -24,6 +24,12 @@ body {
     overflow: hidden;
 }
 
+/* ЗАГАЛЬНЕ ПРАВИЛО ДЛЯ КАРТИНОК (щоб нічого не ламало сайт) */
+img {
+    max-width: 100%;
+    display: block;
+}
+
 /* ФОНОВІ ЕФЕКТИ */
 .main-canvas {
     position: relative;
@@ -85,6 +91,7 @@ body {
     border: 3px solid #fff;
     border-radius: 50%;
     position: relative;
+    flex-shrink: 0;
 }
 
 .crosshair-icon::before, 
@@ -94,19 +101,8 @@ body {
     background-color: #fff;
 }
 
-.crosshair-icon::before {
-    top: 11px;
-    left: -8px;
-    width: 38px;
-    height: 2px;
-}
-
-.crosshair-icon::after {
-    top: -8px;
-    left: 11px;
-    width: 2px;
-    height: 38px;
-}
+.crosshair-icon::before { top: 11px; left: -8px; width: 38px; height: 2px; }
+.crosshair-icon::after { top: -8px; left: 11px; width: 2px; height: 38px; }
 
 .logo h2 {
     font-size: 24px;
@@ -115,7 +111,7 @@ body {
     line-height: 1.1;
 }
 
-/* ПРОФІЛЬ В МЕНЮ */
+/* ПРОФІЛЬ В МЕНЮ (ВИПРАВЛЕНО РОЗМІРИ) */
 .user-mini-profile {
     display: flex;
     align-items: center;
@@ -130,9 +126,12 @@ body {
 .profile-photo-icon {
     width: 50px;
     height: 50px;
+    min-width: 50px;   /* Жорстко фіксуємо розмір */
+    min-height: 50px;  /* Жорстко фіксуємо розмір */
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--text-secondary);
+    flex-shrink: 0;    /* Забороняємо браузеру розтягувати чи стискати фото */
 }
 
 .profile-text {
@@ -232,6 +231,7 @@ body {
 .game-icon {
     width: 28px;
     height: 28px;
+    min-width: 28px;
     border-radius: 4px;
     object-fit: cover;
 }
@@ -286,12 +286,16 @@ body {
     gap: 30px;
 }
 
+/* ГОЛОВНИЙ АВАТАР (ВИПРАВЛЕНО РОЗМІРИ) */
 .main-avatar-large {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
+    min-width: 120px;  /* Жорстко фіксуємо розмір */
+    min-height: 120px; /* Жорстко фіксуємо розмір */
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;    /* Забороняємо браузеру розтягувати чи стискати фото */
 }
 
 .profile-info h3 {
