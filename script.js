@@ -39,7 +39,7 @@ document.getElementById('registration-form').addEventListener('submit', function
 
     errorSpan.style.display = "none";
     document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
-    
+   
     // Після реєстрації показуємо кнопку Settings
     document.getElementById('settings-btn').style.display = 'inline-block';
 
@@ -91,7 +91,7 @@ function saveSettings() {
     const errorSpan = document.getElementById('settings-error');
 
     errorSpan.style.display = 'none';
-
+    
     // Перевірка паролів
     if (newPassword !== "" || confirmPassword !== "") {
         if (newPassword !== confirmPassword) {
@@ -124,7 +124,7 @@ document.getElementById('photo-upload').addEventListener('change', function(even
     
     if (event.target.files.length > 0) {
         fileNameDisplay.textContent = event.target.files[0].name;
-        fileNameDisplay.style.color = "#ece8e1"; 
+        fileNameDisplay.style.color = "#ffffff"; 
     } else {
         fileNameDisplay.textContent = "No file chosen";
         fileNameDisplay.style.color = "#888";
