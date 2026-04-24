@@ -1,0 +1,124 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh; /* Займає всю висоту екрану */
+}
+
+/* Бічна панель */
+.sidebar {
+    width: 260px;
+    background-color: #1a1a1d;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #2d2d30;
+}
+
+.logo {
+    padding: 25px 20px 15px;
+    text-align: center;
+}
+
+.logo h2 {
+    color: #ff4655; /* Акцентний колір */
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+/* Стилі для блоку профілю гравця */
+.user-profile {
+    padding: 0 20px 20px;
+    text-align: center;
+    border-bottom: 1px solid #2d2d30;
+    color: #a0a0a0;
+    font-size: 14px;
+}
+
+.user-profile strong {
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    padding: 15px 25px;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.menu-btn:hover {
+    background-color: #252529;
+    color: #ffffff;
+}
+
+.menu-btn.active {
+    background-color: #252529;
+    color: #ffffff;
+    border-left: 4px solid #ff4655;
+}
+
+/* Іконки ігор */
+.icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    background-color: #444; 
+    border-radius: 4px;
+}
+
+/* Основний контент */
+.content {
+    flex: 1;
+    padding: 50px;
+    background-color: #121212;
+}
+
+.content h1 {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.content p {
+    color: #a0a0a0;
+    line-height: 1.6;
+}
+
+/* Логіка вкладок */
+.tab-content {
+    display: none; /* Ховаємо всі вкладки за замовчуванням */
+}
+
+.active-tab {
+    display: block; /* Показуємо тільки активну */
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Плавна поява тексту при перемиканні */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
