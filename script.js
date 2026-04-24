@@ -3,8 +3,7 @@ let pendingTabId = null;
 let pendingButton = null;
 
 function handleTabClick(btnElement, tabId) {
-    // Дозволяємо переходити на Головну (guest-hall) без реєстрації
-    if (!isUserRegistered && tabId !== 'guest-hall') {
+    if (!isUserRegistered) {
         pendingTabId = tabId;
         pendingButton = btnElement;
         document.getElementById('auth-modal').style.display = 'flex';
@@ -28,7 +27,7 @@ function openTab(btnElement, tabId) {
 document.getElementById('registration-form').addEventListener('submit', function(event) {
     event.preventDefault(); 
 
-    const nicknameInput = document.getElementById('nickname');
+    const nickname = document.getElementById('nickname').value;
     const email = document.getElementById('email').value;
     const errorSpan = document.getElementById('email-error');
 
@@ -39,16 +38,10 @@ document.getElementById('registration-form').addEventListener('submit', function
     }
 
     errorSpan.style.display = "none";
-    
-    // Якщо поле імені пусте, ставимо Nick
-    const nickname = nicknameInput.value.trim() === "" ? "Nick" : nicknameInput.value.trim();
-
-    // Оновлюємо імена всюди
     document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
-    document.getElementById('dashboard-name').innerHTML = `Player: ${nickname}`;
     
-    // Показуємо кнопку налаштувань
-    document.getElementById('settings-btn').style.display = 'block';
+    // Після реєстрації показуємо кнопку Settings
+    document.getElementById('settings-btn').style.display = 'inline-block';
 
     document.getElementById('auth-modal').style.display = 'none';
     isUserRegistered = true;
@@ -58,10 +51,9 @@ document.getElementById('registration-form').addEventListener('submit', function
     }
 });
 
-// ВИПРАВЛЕНО: Закриття реєстрації при кліку поза вікном
+// Закриття реєстрації при кліку поза вікном
 const modalOverlay = document.getElementById('auth-modal');
 modalOverlay.addEventListener('click', function(event) {
-    // Перевіряємо, чи клік був не по самій модальній коробці .modal-box
     if (!event.target.closest('.modal-box')) {
         modalOverlay.style.display = 'none';
         pendingTabId = null;
@@ -69,14 +61,11 @@ modalOverlay.addEventListener('click', function(event) {
     }
 });
 
-// Плейсхолдер імені при завантаженні
-document.addEventListener('DOMContentLoaded', () => {
-    const nicknameInput = document.getElementById('nickname');
-    if (nicknameInput) nicknameInput.value = 'Nick';
-});
+// --- НАЛАШТУВАННЯ ПРОФІЛУ ---
 
-// --- НАЛАШТУВАННЯ ТА АВАТАР ---
-function openSettings() { document.getElementById('right-sidebar').classList.add('open'); }
+function openSettings() {
+    document.getElementById('right-sidebar').classList.add('open');
+}
 
 function closeSettings() {
     document.getElementById('right-sidebar').classList.remove('open');
@@ -86,10 +75,11 @@ function closeSettings() {
     document.getElementById('confirm-password').value = '';
     document.getElementById('photo-upload').value = '';
     
+    // Скидання тексту назви файлу
     const fileNameDisplay = document.getElementById('file-name-display');
     if (fileNameDisplay) {
         fileNameDisplay.textContent = "No file chosen";
-        fileNameDisplay.style.color = "#8b92a5";
+        fileNameDisplay.style.color = "#888";
     }
 }
 
@@ -114,15 +104,13 @@ function saveSettings() {
     // Зміна нікнейму
     if (newNickname.trim() !== "") {
         document.getElementById('player-display').innerHTML = `Player: <strong>${newNickname}</strong>`;
-        document.getElementById('dashboard-name').innerHTML = `Player: ${newNickname}`;
     }
 
-    // Зміна фото профілю у лівому меню та на головній
+    // Зміна фото профілю
     if (photoUpload.files && photoUpload.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            document.getElementById('sidebar-avatar').src = e.target.result;
-            document.getElementById('main-avatar').src = e.target.result;
+            document.getElementById('player-photo').src = e.target.result;
         }
         reader.readAsDataURL(photoUpload.files[0]);
     }
@@ -130,14 +118,15 @@ function saveSettings() {
     closeSettings();
 }
 
-// Оновлення тексту при виборі файлу в налаштуваннях
+// Оновлення тексту при виборі файлу
 document.getElementById('photo-upload').addEventListener('change', function(event) {
     const fileNameDisplay = document.getElementById('file-name-display');
+    
     if (event.target.files.length > 0) {
         fileNameDisplay.textContent = event.target.files[0].name;
         fileNameDisplay.style.color = "#ece8e1"; 
     } else {
         fileNameDisplay.textContent = "No file chosen";
-        fileNameDisplay.style.color = "#8b92a5";
+        fileNameDisplay.style.color = "#888";
     }
 });
