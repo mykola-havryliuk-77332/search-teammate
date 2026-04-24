@@ -2,9 +2,8 @@ let isUserRegistered = false;
 let pendingTabId = null;
 let pendingButton = null;
 
-// Логіка перемикання вкладок
 function handleTabClick(btnElement, tabId) {
-    if (!isUserRegistered && tabId !== 'dashboard-tab') {
+    if (!isUserRegistered) {
         pendingTabId = tabId;
         pendingButton = btnElement;
         document.getElementById('auth-modal').style.display = 'flex';
@@ -24,26 +23,29 @@ function openTab(btnElement, tabId) {
     btnElement.classList.add('active');
 }
 
-// Реєстрація
+// РЕЄСТРАЦІЯ
 document.getElementById('registration-form').addEventListener('submit', function(event) {
     event.preventDefault(); 
 
-    const nickname = document.getElementById('nickname').value;
+    const nicknameInput = document.getElementById('nickname');
     const email = document.getElementById('email').value;
     const errorSpan = document.getElementById('email-error');
 
+    // Кастомна перевірка пошти
     if (!email.includes('@') || !email.includes('.')) {
-        errorSpan.textContent = "INVALID LINK CREDENTIALS";
+        errorSpan.textContent = "Please enter a valid email address with '@' and '.'";
         errorSpan.style.display = "block";
         return; 
     }
 
     errorSpan.style.display = "none";
     
-    // Оновлюємо ім'я у всіх місцях
-    document.getElementById('sidebar-player-display').innerHTML = `Player : <strong>${nickname}</strong>`;
-    document.getElementById('main-player-name').textContent = nickname;
-    
+    // Використовуємо 'Nick' як дефолтне ім'я, якщо інпут порожній
+    const nickname = nicknameInput.value.trim() === "" ? "Nick" : nicknameInput.value.trim();
+
+    // Оновлюємо ім'я у лівому меню
+    document.getElementById('player-display').innerHTML = `Player : <strong>${nickname}</strong>`;
+
     document.getElementById('auth-modal').style.display = 'none';
     isUserRegistered = true;
 
@@ -52,29 +54,18 @@ document.getElementById('registration-form').addEventListener('submit', function
     }
 });
 
-// Закриття модалки по кліку на фон
+// Закриття реєстрації при кліку поза вікном
 const modalOverlay = document.getElementById('auth-modal');
 modalOverlay.addEventListener('click', function(event) {
-    if (!event.target.closest('.glass-modal')) {
+    if (!event.target.closest('.glass-panel')) {
         modalOverlay.style.display = 'none';
         pendingTabId = null;
         pendingButton = null;
     }
 });
 
-// Завантаження Аватара прямо на Дашборді
-document.getElementById('dashboard-photo-upload').addEventListener('change', function(event) {
-    if (event.target.files && event.target.files[0]) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            // Змінюємо головне фото
-            document.getElementById('main-avatar').src = e.target.result;
-            
-            // Якщо захочеш додати міні-фото в ліве меню, можна розкоментувати:
-            // document.getElementById('sidebar-avatar').src = e.target.result;
-        }
-        
-        reader.readAsDataURL(event.target.files[0]);
-    }
+// Додаємо плейсхолдер 'Nick' до інпуту ніка при завантаженні
+document.addEventListener('DOMContentLoaded', () => {
+    const nicknameInput = document.getElementById('nickname');
+    if (nicknameInput) nicknameInput.value = 'Nick';
 });
