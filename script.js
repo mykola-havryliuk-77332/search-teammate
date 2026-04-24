@@ -42,6 +42,10 @@ document.getElementById('registration-form').addEventListener('submit', function
 
     errorSpan.style.display = "none";
     document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
+    
+    // Якщо реєстрація успішна - міняємо іконку профілю
+    document.getElementById('player-photo').src = "photo.jpg"; 
+
     document.getElementById('auth-modal').style.display = 'none';
     isUserRegistered = true;
 
@@ -50,12 +54,16 @@ document.getElementById('registration-form').addEventListener('submit', function
     }
 });
 
-// НОВЕ: Закриття модального вікна при кліку поза ним (на темний фон)
-document.getElementById('auth-modal').addEventListener('click', function(event) {
-    // Перевіряємо, чи клік був саме по темному фону (overlay), а не по самій формі
-    if (event.target === this) {
-        this.style.display = 'none';
-        // Очищаємо дані про вкладку, щоб користувач не перейшов на неї випадково
+// ЗАКРИТТЯ ВІКНА ПРИ КЛІКУ ПОЗА НИМ
+const modalOverlay = document.getElementById('auth-modal');
+
+modalOverlay.addEventListener('click', function(event) {
+    // Перевіряємо, чи клік був безпосередньо по темному фону (overlay), 
+    // і чи НЕ був він по самій формі (.modal-box) або всередині неї.
+    if (!event.target.closest('.modal-box')) {
+        modalOverlay.style.display = 'none';
+        
+        // Очищаємо дані, щоб користувач не перейшов на вкладку випадково
         pendingTabId = null;
         pendingButton = null;
     }
