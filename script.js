@@ -5,18 +5,12 @@ let pendingButton = null;
 
 // Функція, яка спрацьовує при кліку на гру в меню
 function handleTabClick(btnElement, tabId) {
-    // Якщо користувач ще не зареєстрований
     if (!isUserRegistered) {
-        // Запам'ятовуємо, куди він хотів перейти
         pendingTabId = tabId;
         pendingButton = btnElement;
-        
-        // Показуємо модальне вікно реєстрації (змінюємо display з none на flex)
         document.getElementById('auth-modal').style.display = 'flex';
-        return; // Зупиняємо виконання, вкладку не відкриваємо
+        return; 
     }
-
-    // Якщо вже зареєстрований — просто відкриваємо вкладку
     openTab(btnElement, tabId);
 }
 
@@ -34,34 +28,35 @@ function openTab(btnElement, tabId) {
 
 // Обробка форми реєстрації
 document.getElementById('registration-form').addEventListener('submit', function(event) {
-    // Зупиняємо стандартне перезавантаження сторінки при відправці форми
     event.preventDefault(); 
 
     const nickname = document.getElementById('nickname').value;
     const email = document.getElementById('email').value;
     const errorSpan = document.getElementById('email-error');
 
-    // Кастомна перевірка пошти на наявність @ та крапки
     if (!email.includes('@') || !email.includes('.')) {
         errorSpan.textContent = "Please enter a valid email address with '@' and '.'";
         errorSpan.style.display = "block";
-        return; // Якщо пошта неправильна, зупиняємо реєстрацію
+        return; 
     }
 
-    // Якщо все добре, прибираємо помилку (якщо вона була)
     errorSpan.style.display = "none";
-
-    // Оновлюємо нікнейм у лівому меню
     document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
-
-    // Закриваємо модальне вікно
     document.getElementById('auth-modal').style.display = 'none';
-
-    // Встановлюємо статус "зареєстрований"
     isUserRegistered = true;
 
-    // Відкриваємо вкладку, на яку користувач клікав до реєстрації
     if (pendingTabId && pendingButton) {
         openTab(pendingButton, pendingTabId);
+    }
+});
+
+// НОВЕ: Закриття модального вікна при кліку поза ним (на темний фон)
+document.getElementById('auth-modal').addEventListener('click', function(event) {
+    // Перевіряємо, чи клік був саме по темному фону (overlay), а не по самій формі
+    if (event.target === this) {
+        this.style.display = 'none';
+        // Очищаємо дані про вкладку, щоб користувач не перейшов на неї випадково
+        pendingTabId = null;
+        pendingButton = null;
     }
 });
