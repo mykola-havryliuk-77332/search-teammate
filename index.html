@@ -19,19 +19,25 @@
                 </div>
                 
                 <div class="user-mini-profile">
-                    <span id="player-display">Player : <strong>Guest</strong></span>
+                    <img src="img/user.jpg" alt="Player Photo" class="profile-photo-icon" id="sidebar-avatar">
+                    <div class="profile-text">
+                        <span id="player-display">Player: <strong>Guest</strong></span>
+                        <button id="settings-btn" class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
+                    </div>
                 </div>
 
                 <nav class="menu">
+                    <button class="menu-btn active" onclick="handleTabClick(this, 'guest-hall')">
+                        <span class="btn-glow"></span>
+                        🏠 Dashboard
+                    </button>
                     <button class="menu-btn cs-btn" onclick="handleTabClick(this, 'cs-tab')">
                         <span class="btn-glow"></span>
-                        <span class="game-icon cs-icon"></span>
-                        Counter-Strike
+                        <img src="img/cs.jpg" alt="CS" class="game-icon"> Counter-Strike
                     </button>
                     <button class="menu-btn val-btn" onclick="handleTabClick(this, 'val-tab')">
                         <span class="btn-glow"></span>
-                        <span class="game-icon val-icon"></span>
-                        Valorant
+                        <img src="img/valorant.jpg" alt="VAL" class="game-icon"> Valorant
                     </button>
                 </nav>
             </aside>
@@ -46,48 +52,73 @@
                     <div class="glass-panel profile-section">
                         <h2>Your Profile</h2>
                         <div class="profile-row">
-                            <div class="avatar-placeholder">
-                                <span class="avatar-icon"></span>
-                            </div>
+                            <img src="img/user.jpg" alt="Avatar" id="main-avatar" class="main-avatar-large">
                             <div class="profile-info">
-                                <h3>Player: Guest</h3>
-                                <p>REGISTER TO VIEW FULL PROFILE</p>
-                                <button class="upload-btn">UPLOAD AVATAR 👤</button>
+                                <h3 id="dashboard-name">Player: Guest</h3>
+                                <p>Register to unlock full potential</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="glass-panel quick-start">
-                        <h2>QUICK START: SELECT YOUR GAME</h2>
-                        <p>REGISTER TO ACCESS LOBBIES AND SQUADS</p>
-                    </div>
-
-                    <div class="glass-panel recent-squads">
-                        <h2>RECENT SQUADS</h2>
-                        <p>N/A</p>
                     </div>
                 </section>
 
                 <section id="cs-tab" class="tab-content">
                     <div class="glass-panel">
+                        <img src="img/cs.jpg" alt="CS Banner" class="game-banner">
                         <h2>Counter-Strike Matchmaking</h2>
-                        <p>Welcome, Agent Nick. Find your team for Faceit or Premier matches.</p>
-                        </div>
+                        <p>Find your team for Faceit or Premier matches.</p>
+                    </div>
                 </section>
 
                 <section id="val-tab" class="tab-content">
                     <div class="glass-panel">
+                        <img src="img/valorant.jpg" alt="Valorant Banner" class="game-banner">
                         <h2>Valorant Agent Search</h2>
-                        <p>Welcome, Agent Nick. Select your main agent type to find balanced teams.</p>
-                        </div>
+                        <p>Select your main agent type to find balanced teams.</p>
+                    </div>
                 </section>
             </main>
         </div>
     </div>
 
+    <aside class="right-sidebar" id="right-sidebar">
+        <div class="sidebar-header">
+            <h3>Profile Settings</h3>
+            <button class="close-btn" onclick="closeSettings()">✕</button>
+        </div>
+        
+        <div class="settings-content">
+            <div class="input-group">
+                <label>Upload Avatar</label>
+                <div class="custom-file-upload">
+                    <input type="file" id="photo-upload" accept="image/*" hidden>
+                    <label for="photo-upload" class="custom-file-btn">Choose File</label>
+                    <span id="file-name-display" class="file-name-text">No file chosen</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="change-nickname">New Nickname</label>
+                <input type="text" id="change-nickname" placeholder="Enter new nickname">
+            </div>
+
+            <div class="input-group">
+                <label for="change-password">New Password</label>
+                <input type="password" id="change-password" placeholder="••••••••">
+            </div>
+
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" placeholder="••••••••">
+                <span id="settings-error" class="error-text"></span>
+            </div>
+
+            <button class="submit-btn" onclick="saveSettings()">Save Changes</button>
+        </div>
+    </aside>
+
     <div id="auth-modal" class="modal-overlay">
         <div class="glass-panel modal-box">
-            <header class="modal-header">
+            <div class="modal-header">
                 <h2>HAVRIS FINDING</h2>
             </div>
             <p class="modal-subtitle">Join the network to find your squad</p>
