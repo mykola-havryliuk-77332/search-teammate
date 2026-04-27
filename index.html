@@ -90,26 +90,41 @@
 
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-box">
-            <h2>Registration</h2>
-            <p class="modal-subtitle">Join to access game lobbies</p>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-login" onclick="switchAuth('login')">Login</button>
+                <button class="auth-tab" id="tab-register" onclick="switchAuth('register')">Register</button>
+            </div>
             
-            <form id="registration-form">
+            <h2 id="auth-title">Welcome Back</h2>
+            <p class="modal-subtitle" id="auth-subtitle">Login to access game lobbies</p>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="example@mail.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                    <span id="login-error" class="error-text"></span>
+                </div>
+                <button type="submit" class="submit-btn">Login & Enter</button>
+            </form>
+
+            <form id="registration-form" style="display: none;">
                 <div class="input-group">
                     <label for="nickname">Nickname</label>
                     <input type="text" id="nickname" placeholder="e.g., Nick" required>
                 </div>
-                
                 <div class="input-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" placeholder="example@mail.com" required>
                     <span id="email-error" class="error-text"></span>
                 </div>
-
                 <div class="input-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
-
                 <button type="submit" class="submit-btn">Register & Enter</button>
             </form>
         </div>
