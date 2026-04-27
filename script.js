@@ -1,6 +1,10 @@
 let isUserRegistered = false;
+let currentMode = 'reg'; 
 let pendingTabId = null;
 let pendingButton = null;
+
+// Твоє посилання з Railway
+const API_URL = 'https://st-backend-production.up.railway.app';
 
 function handleTabClick(btnElement, tabId) {
     if (!isUserRegistered) {
@@ -23,115 +27,80 @@ function openTab(btnElement, tabId) {
     btnElement.classList.add('active');
 }
 
-// --- ЛОГІКА ПЕРЕМИКАННЯ ВХІД / РЕЄСТРАЦІЯ ---
-function switchAuth(type) {
-    const loginForm = document.getElementById('login-form');
-    const regForm = document.getElementById('registration-form');
+// Функція для перемикання між Login та Register
+function switchAuth(mode) {
+    currentMode = mode;
     const title = document.getElementById('auth-title');
-    const subtitle = document.getElementById('auth-subtitle');
+    const nickGroup = document.getElementById('nick-group');
+    const btn = document.getElementById('submit-btn');
     
-    document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
-
-    if (type === 'login') {
-        document.getElementById('tab-login').classList.add('active');
-        loginForm.style.display = 'block';
-        regForm.style.display = 'none';
-        title.textContent = 'Welcome Back';
-        subtitle.textContent = 'Login to access game lobbies';
-    } else {
-        document.getElementById('tab-register').classList.add('active');
-        loginForm.style.display = 'none';
-        regForm.style.display = 'block';
+    if (mode === 'reg') {
         title.textContent = 'Registration';
-        subtitle.textContent = 'Join to find your perfect squad';
+        if(nickGroup) nickGroup.style.display = 'block';
+        btn.textContent = 'Register & Enter';
+    } else {
+        title.textContent = 'Welcome Back';
+        if(nickGroup) nickGroup.style.display = 'none';
+        btn.textContent = 'Login & Enter';
     }
 }
 
-// --- ВХІД (LOGIN) ---
-document.getElementById('login-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    const errorSpan = document.getElementById('login-error');
-    const submitBtn = this.querySelector('.submit-btn');
-
-    errorSpan.style.display = "none";
-    submitBtn.textContent = "Connecting...";
-
-    try {
-        const response = await fetch('http://localhost:3000/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('player-display').innerHTML = `Player: <strong>${data.user.username}</strong>`;
-            successfulAuth();
-        } else {
-            const errorText = await response.text();
-            errorSpan.textContent = "❌ " + errorText;
-            errorSpan.style.display = "block";
-        }
-    } catch (error) {
-        errorSpan.textContent = "❌ Server error. Make sure your Node.js backend is running!";
-        errorSpan.style.display = "block";
-    }
-    submitBtn.textContent = "Login & Enter";
-});
-
-// --- РЕЄСТРАЦІЯ (REGISTER) ---
-document.getElementById('registration-form').addEventListener('submit', async function(event) {
-    event.preventDefault(); 
-    const nickname = document.getElementById('nickname').value;
+// ОБРОБКА ФОРМИ (РЕЄСТРАЦІЯ ТА ВХІД)
+document.getElementById('auth-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const errorSpan = document.getElementById('email-error');
-    const submitBtn = this.querySelector('.submit-btn');
+    const nickname = document.getElementById('nickname') ? document.getElementById('nickname').value : "";
+    const errorEl = document.getElementById('error-msg') || document.getElementById('email-error');
+    const submitBtn = document.getElementById('submit-btn');
 
-    if (!email.includes('@') || !email.includes('.')) {
-        errorSpan.textContent = "Please enter a valid email address";
-        errorSpan.style.display = "block";
-        return; 
-    }
+    if (errorEl) errorEl.style.display = 'none';
+    submitBtn.textContent = "Connecting...";
 
-    errorSpan.style.display = "none";
-    submitBtn.textContent = "Registering...";
+    const path = currentMode === 'reg' ? '/register' : '/login';
+    const body = currentMode === 'reg' ? { email, password, username: nickname } : { email, password };
 
     try {
-        const response = await fetch('http://localhost:3000/register', {
+        const res = await fetch(`${API_URL}${path}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, username: nickname })
+            body: JSON.stringify(body)
         });
 
-        if (response.ok) {
-            document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
-            successfulAuth();
+        if (res.ok) {
+            const data = await res.json();
+            isUserRegistered = true;
+            
+            // Оновлюємо нікнейм у профілі
+            const finalName = nickname || data.user.username || "Player";
+            document.getElementById('player-display').innerHTML = `Player: <strong>${finalName}</strong>`;
+            
+            // Показуємо кнопку налаштувань та закриваємо вікно
+            document.getElementById('settings-btn').style.display = 'inline-block';
+            document.getElementById('auth-modal').style.display = 'none';
+            
+            if (pendingTabId && pendingButton) {
+                openTab(pendingButton, pendingTabId);
+            }
         } else {
-            const errorText = await response.text();
-            errorSpan.textContent = "❌ " + errorText;
-            errorSpan.style.display = "block";
+            const txt = await res.text();
+            if (errorEl) {
+                errorEl.textContent = "❌ " + txt;
+                errorEl.style.display = 'block';
+            }
         }
-    } catch (error) {
-        errorSpan.textContent = "❌ Server error. Make sure your Node.js backend is running!";
-        errorSpan.style.display = "block";
+    } catch (err) {
+        if (errorEl) {
+            errorEl.textContent = "❌ Server error. Start your Railway backend!";
+            errorEl.style.display = 'block';
+        }
+    } finally {
+        submitBtn.textContent = currentMode === 'reg' ? 'Register & Enter' : 'Login & Enter';
     }
-    submitBtn.textContent = "Register & Enter";
 });
 
-function successfulAuth() {
-    document.getElementById('settings-btn').style.display = 'inline-block';
-    document.getElementById('auth-modal').style.display = 'none';
-    isUserRegistered = true;
-
-    if (pendingTabId && pendingButton) {
-        openTab(pendingButton, pendingTabId);
-    }
-}
-
-// Закриття авторизації при кліку поза вікном
+// Закриття модалки при кліку поза вікном
 const modalOverlay = document.getElementById('auth-modal');
 modalOverlay.addEventListener('click', function(event) {
     if (!event.target.closest('.modal-box')) {
@@ -148,17 +117,13 @@ function openSettings() {
 
 function closeSettings() {
     document.getElementById('right-sidebar').classList.remove('open');
-    document.getElementById('settings-error').style.display = 'none';
+    const err = document.getElementById('settings-error');
+    if(err) err.style.display = 'none';
+    
     document.getElementById('change-nickname').value = '';
     document.getElementById('change-password').value = '';
     document.getElementById('confirm-password').value = '';
     document.getElementById('photo-upload').value = '';
-
-    const fileNameDisplay = document.getElementById('file-name-display');
-    if (fileNameDisplay) {
-        fileNameDisplay.textContent = "No file chosen";
-        fileNameDisplay.style.color = "#888";
-    }
 }
 
 function saveSettings() {
@@ -168,12 +133,14 @@ function saveSettings() {
     const photoUpload = document.getElementById('photo-upload');
     const errorSpan = document.getElementById('settings-error');
 
-    errorSpan.style.display = 'none';
+    if (errorSpan) errorSpan.style.display = 'none';
 
     if (newPassword !== "" || confirmPassword !== "") {
         if (newPassword !== confirmPassword) {
-            errorSpan.textContent = "Passwords do not match!";
-            errorSpan.style.display = "block";
+            if (errorSpan) {
+                errorSpan.textContent = "Passwords do not match!";
+                errorSpan.style.display = "block";
+            }
             return; 
         }
     }
@@ -195,7 +162,6 @@ function saveSettings() {
 
 document.getElementById('photo-upload').addEventListener('change', function(event) {
     const fileNameDisplay = document.getElementById('file-name-display');
-    
     if (event.target.files.length > 0) {
         fileNameDisplay.textContent = event.target.files[0].name;
         fileNameDisplay.style.color = "#ffffff"; 
