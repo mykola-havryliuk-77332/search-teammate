@@ -17,7 +17,7 @@
             <div class="user-profile">
                 <img src="img/user.jpg" alt="Player Photo" class="profile-photo-icon" id="player-photo">
                 <span id="player-display">Player: <strong>Guest</strong></span>
-                <button id="settings-btn" class="settings-btn" onclick="openSettings()" style="display: none;">⚙️ Settings</button>
+                <button id="settings-btn" class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
             </div>
 
             <nav class="menu">
@@ -90,32 +90,27 @@
 
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-box">
-            <div class="auth-tabs">
-                <button class="auth-tab active" id="tab-login" onclick="switchAuth('log')">Login</button>
-                <button class="auth-tab" id="tab-register" onclick="switchAuth('reg')">Register</button>
-            </div>
+            <h2>Registration</h2>
+            <p class="modal-subtitle">Join to access game lobbies</p>
             
-            <h2 id="auth-title">Welcome Back</h2>
-            <p class="modal-subtitle" id="auth-subtitle">Login to access game lobbies</p>
-            
-            <form id="auth-form">
-                <div class="input-group" id="nick-group" style="display: none;">
+            <form id="registration-form">
+                <div class="input-group">
                     <label for="nickname">Nickname</label>
-                    <input type="text" id="nickname" placeholder="e.g., Nick">
+                    <input type="text" id="nickname" placeholder="e.g., Nick" required>
                 </div>
                 
                 <div class="input-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" placeholder="example@mail.com" required>
+                    <span id="email-error" class="error-text"></span>
                 </div>
 
                 <div class="input-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="••••••••" required>
-                    <span id="error-msg" class="error-text"></span>
                 </div>
 
-                <button type="submit" class="submit-btn" id="submit-btn">Login & Enter</button>
+                <button type="submit" class="submit-btn">Register & Enter</button>
             </form>
         </div>
     </div>
