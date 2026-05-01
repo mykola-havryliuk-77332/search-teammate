@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Rajdhani', sans-serif;
+    font-family: 'Rajdhani', 'Segoe UI', Tahoma, sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -12,7 +12,7 @@
     background: rgba(0, 0, 0, 0.2);
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2); 
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -20,7 +20,7 @@
 }
 
 body {
-    /* Робимо яскравий анімований градієнт, щоб скло мало що розмивати */
+    /* Анімований градієнт для фону, щоб скло гарно його розмивало */
     background: linear-gradient(135deg, #0b0b0c, #2a0815, #120b1c, #0b0b0c);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
@@ -40,21 +40,21 @@ body {
     overflow: hidden;
 }
 
-/* --- СКЛЯНА БІЧНА ПАНЕЛЬ --- */
+/* --- СКЛЯНА БІЧНА ПАНЕЛЬ (ЛІВА) --- */
 .sidebar {
     width: 280px;
     background: rgba(20, 20, 25, 0.25);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 5px 0 30px rgba(0, 0, 0, 0.3);
     z-index: 10;
 }
 
 .logo {
-    padding: 30px 20px;
+    padding: 30px 20px 20px;
     text-align: center;
 }
 
@@ -62,6 +62,7 @@ body {
     color: #ff4655;
     font-size: 32px;
     font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
     text-shadow: 0 0 15px rgba(255, 70, 85, 0.5);
 }
@@ -72,6 +73,8 @@ body {
     flex-direction: column;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #a0a0a0;
+    font-size: 16px;
     gap: 12px;
 }
 
@@ -79,400 +82,219 @@ body {
     width: 75px;
     height: 75px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 70, 85, 0.7);
     object-fit: cover;
+    border: 2px solid rgba(255, 70, 85, 0.7);
     box-shadow: 0 0 15px rgba(255, 70, 85, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-photo-icon:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 70, 85, 0.6);
+}
+
+.user-profile strong {
+    color: #ffffff;
+    letter-spacing: 1px;
+    font-size: 18px;
 }
 
 .settings-btn {
+    display: none;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
+    color: #ece8e1;
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .settings-btn:hover {
-    background: rgba(255, 70, 85, 0.8);
+    background-color: rgba(255, 70, 85, 0.8);
     border-color: rgba(255, 70, 85, 1);
+    color: #ffffff;
     box-shadow: 0 0 15px rgba(255, 70, 85, 0.4);
 }
 
+/* --- НАВІГАЦІЯ (МЕНЮ) --- */
 .menu {
     display: flex;
     flex-direction: column;
     padding: 25px 0;
-    gap: 5px;
+    gap: 8px;
 }
 
 .menu-btn {
     background: transparent;
     border: none;
-    color: #a0a0a0;
-    padding: 15px 25px;
+    color: #8a8a93;
+    padding: 14px 25px;
     text-align: left;
     font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 15px;
+    transition: all 0.3s ease;
     border-left: 4px solid transparent;
-    transition: all 0.3s;
+    position: relative;
 }
 
-.menu-btn:hover,
+.menu-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    padding-left: 30px;
+}
+
 .menu-btn.active {
     background: rgba(255, 255, 255, 0.05);
-    color: white;
+    color: #ffffff;
     border-left: 4px solid #ff4655;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .game-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-}
-
-.msg-badge {
-    background: #ff4655;
-    color: white;
-    font-size: 12px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-left: auto;
-    box-shadow: 0 0 10px rgba(255, 70, 85, 0.4);
+    width: 38px; 
+    height: 38px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 /* --- ОСНОВНИЙ КОНТЕНТ --- */
 .content {
     flex: 1;
-    padding: 40px;
+    padding: 60px;
+    background: transparent; /* Прозорий, щоб бачити градієнт */
     overflow-y: auto;
-    /* Фон прозорий, щоб було видно градієнт body */
-    background: transparent; 
 }
 
 .content h1 {
-    font-size: 40px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 42px;
+    letter-spacing: 1px;
     text-shadow: 0 4px 15px rgba(0,0,0,0.6);
 }
 
-.tab-content {
-    display: none;
-    animation: fadeIn 0.4s ease;
-}
-
-.active-tab {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+.content p {
+    color: #cfcfcf;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-size: 20px;
 }
 
 .game-banner {
     width: 100%;
-    height: 200px;
+    max-height: 320px;
     object-fit: cover;
     border-radius: 16px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* --- СКЛЯНІ ПАНЕЛІ ТА КАРТКИ (GLASSMORPHISM) --- */
-.filter-panel, .player-card, .stat-box {
-    background: rgba(30, 30, 35, 0.25);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    border-radius: 16px;
+.game-banner:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 20px 50px rgba(255, 70, 85, 0.15);
 }
 
-.filter-panel {
-    padding: 25px;
-    display: flex;
-    gap: 20px;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 200px;
-}
-
-.input-group label {
-    color: #cfcfcf;
-    font-size: 14px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Скляні інпути */
-.custom-select,
-.input-group input,
-.chat-input-area input {
-    padding: 12px 15px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    border-radius: 8px;
-    font-size: 16px;
-    outline: none;
-    transition: all 0.3s;
-    backdrop-filter: blur(5px);
-}
-
-.custom-select:focus,
-.input-group input:focus,
-.chat-input-area input:focus {
-    border-color: rgba(255, 70, 85, 0.8);
-    background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 15px rgba(255, 70, 85, 0.2);
-}
-
-.custom-select option {
-    background: #141416;
-    color: white;
-}
-
-.search-btn,
-.submit-btn,
-.send-msg-btn {
-    background: linear-gradient(135deg, rgba(255, 70, 85, 0.9), rgba(212, 34, 50, 0.9));
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 12px 25px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 8px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.3s;
-    backdrop-filter: blur(4px);
-}
-
-.search-btn:hover,
-.submit-btn:hover,
-.send-msg-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 70, 85, 0.4);
-}
-
-/* Сітка гравців */
-.results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.player-card {
-    padding: 25px;
-    text-align: center;
-    transition: all 0.3s;
-}
-
-.player-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(255, 70, 85, 0.5);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 70, 85, 0.1);
-}
-
-.player-card h3 {
-    margin: 10px 0 5px;
-    font-size: 24px;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-}
-
-.player-card p {
-    color: #b0b0b0;
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-
-.msg-btn {
-    background: rgba(255, 70, 85, 0.1);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 70, 85, 0.5);
-    color: #ff4655;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-    width: 100%;
-    font-weight: 600;
-}
-
-.msg-btn:hover {
-    background: rgba(255, 70, 85, 0.8);
-    color: white;
-    box-shadow: 0 0 15px rgba(255, 70, 85, 0.3);
-}
-
-/* --- СКЛЯНИЙ ЧАТ --- */
-.chat-container {
-    display: flex;
-    height: 600px;
-    background: rgba(20, 20, 25, 0.3);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-    margin-top: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-}
-
-.chat-sidebar {
-    width: 300px;
-    background: rgba(0, 0, 0, 0.2);
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
-    overflow-y: auto;
-}
-
-.chat-contact {
-    padding: 20px 15px;
-    display: flex;
-    gap: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-}
-
-.chat-contact:hover,
-.chat-contact.active {
-    background: rgba(255, 255, 255, 0.05);
-    border-left: 4px solid #ff4655;
-}
-
-.contact-avatar {
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-.val-color {
-    background: linear-gradient(135deg, rgba(255,70,85,0.8), rgba(212,34,50,0.8));
-    border-color: rgba(255,70,85,0.5);
-    color: white;
-}
-
-.contact-info h4 {
-    font-size: 18px;
-    margin-bottom: 5px;
-}
-
-.contact-info p {
-    color: #aaa;
-    font-size: 14px;
-}
-
-.chat-window {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-header {
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 20px;
-    backdrop-filter: blur(10px);
-}
-
-.chat-messages {
-    flex: 1;
-    padding: 25px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.msg-bubble {
-    max-width: 70%;
-    padding: 14px 20px;
-    border-radius: 16px;
-    font-size: 16px;
-    line-height: 1.5;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.msg-bubble.received {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-}
-
-.msg-bubble.sent {
-    background: linear-gradient(135deg, rgba(255, 70, 85, 0.8), rgba(212, 34, 50, 0.8));
-    border: 1px solid rgba(255, 70, 85, 0.4);
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-}
-
-.chat-input-area {
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    gap: 15px;
-    backdrop-filter: blur(10px);
-}
-
-/* --- СКЛЯНІ МОДАЛКИ --- */
-.modal-overlay {
+.tab-content {
     display: none;
+}
+
+.active-tab {
+    display: block;
+    animation: fadeIn 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- СКЛЯНІ МОДАЛЬНІ ВІКНА --- */
+.modal-overlay {
+    display: none; 
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px); /* Розмиває весь фон при відкритті модалки */
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
 
 .modal-box {
     background: rgba(30, 30, 35, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 40px;
+    padding: 45px 40px;
     border-radius: 20px;
-    width: 400px;
+    width: 100%;
+    max-width: 420px;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    text-align: center;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255, 255, 255, 0.02);
 }
 
+/* СТИЛІ ДЛЯ ВЗЯТОК ЛОГІН/РЕЄСТРАЦІЯ */
+.auth-tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auth-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.auth-tab:hover {
+    color: #ffffff;
+}
+
+.auth-tab.active {
+    color: #ff4655;
+    border-bottom: 2px solid #ff4655;
+}
+
+.modal-box h2 {
+    text-align: center;
+    margin-bottom: 5px;
+    color: #ffffff;
+    font-size: 36px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.modal-subtitle {
+    text-align: center;
+    color: #ff4655;
+    margin-bottom: 30px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* СКЛЯНА ПРАВА ПАНЕЛЬ НАЛАШТУВАНЬ */
 .right-sidebar {
     position: fixed;
     top: 0;
@@ -484,8 +306,10 @@ body {
     -webkit-backdrop-filter: blur(25px);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     transition: right 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
-    padding: 30px;
     z-index: 900;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
     box-shadow: -10px 0 30px rgba(0,0,0,0.5);
 }
 
@@ -498,31 +322,138 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     padding-bottom: 15px;
+}
+
+.sidebar-header h3 {
+    color: #ffffff;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .close-btn {
     background: none;
     border: none;
-    color: white;
+    color: #a0a0a0;
     font-size: 24px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: color 0.3s, transform 0.3s;
 }
+
 .close-btn:hover {
     color: #ff4655;
     transform: rotate(90deg);
 }
 
-.dashboard-stats {
+/* --- ГЕЙМЕРСЬКИЙ СКЛЯНИЙ ДИЗАЙН ІНПУТІВ --- */
+.input-group {
+    margin-bottom: 22px;
     display: flex;
-    gap: 20px;
-    margin-top: 30px;
+    flex-direction: column;
 }
 
-.stat-box h3 {
+.input-group label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #cfcfcf;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.input-group input {
+    padding: 14px 18px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    color: #ffffff;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: rgba(255, 70, 85, 0.8);
+    box-shadow: 0 0 15px rgba(255, 70, 85, 0.25);
+    background: rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.error-text {
     color: #ff4655;
-    font-size: 26px;
-    text-shadow: 0 0 10px rgba(255, 70, 85, 0.3);
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+    font-weight: 600;
+}
+
+/* --- КАСТОМНЕ ЗАВАНТАЖЕННЯ ФАЙЛУ --- */
+.custom-file-upload {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-file-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.custom-file-btn:hover {
+    border-color: rgba(255, 70, 85, 0.8);
+    background-color: rgba(255, 70, 85, 0.8);
+    box-shadow: 0 0 15px rgba(255, 70, 85, 0.4);
+}
+
+.file-name-text {
+    color: #888;
+    font-size: 14px;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+/* --- ГЕЙМЕРСЬКІ КНОПКИ (Submit) --- */
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(255, 70, 85, 0.9), rgba(212, 34, 50, 0.9));
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    backdrop-filter: blur(4px);
+}
+
+.submit-btn:hover {
+    box-shadow: 0 8px 20px rgba(255, 70, 85, 0.4);
+    transform: translateY(-3px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
 }
