@@ -3,103 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Havr`s finding</title>
+    <title>Havr's finding</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
+        <!-- БІЧНА ПАНЕЛЬ -->
         <aside class="sidebar">
             <div class="logo">
-                <h2>Havr`s finding</h2>
+                <h2>Havr's finding</h2>
             </div>
             
             <div class="user-profile">
                 <img src="img/user.jpg" alt="Player Photo" class="profile-photo-icon" id="player-photo">
                 <span id="player-display">Player: <strong>Guest</strong></span>
+                <button id="auth-trigger-btn" class="settings-btn" onclick="openAuthModal()">Login / Register</button>
                 <button id="settings-btn" class="settings-btn" onclick="openSettings()" style="display: none;">⚙️ Settings</button>
             </div>
 
             <nav class="menu">
-                <button class="menu-btn" onclick="handleTabClick(this, 'cs-tab')">
-                    <img src="img/cs.jpg" alt="CS Icon" class="game-icon"> 
-                    Counter-Strike
+                <button class="menu-btn active" onclick="openTab(this, 'welcome-tab')">🏠 Home</button>
+                <button class="menu-btn" onclick="openTab(this, 'cs-tab')">
+                    <img src="img/cs.jpg" alt="CS" class="game-icon"> Counter-Strike
                 </button>
-                <button class="menu-btn" onclick="handleTabClick(this, 'val-tab')">
-                    <img src="img/valorant.jpg" alt="VAL Icon" class="game-icon"> 
-                    Valorant
+                <button class="menu-btn" onclick="openTab(this, 'val-tab')">
+                    <img src="img/valorant.jpg" alt="VAL" class="game-icon"> Valorant
                 </button>
+                <button class="menu-btn" onclick="openTab(this, 'messages-tab')">💬 Messages <span class="msg-badge">3</span></button>
             </nav>
         </aside>
 
+        <!-- ОСНОВНИЙ КОНТЕНТ -->
         <main class="content">
+            <!-- HOME -->
             <section id="welcome-tab" class="tab-content active-tab">
-                <h1>Welcome to Havr`s finding</h1>
-                <p>Please select a game from the menu to get started and find your perfect squad.</p>
+                <h1>Welcome to Havr's finding</h1>
+                <p>Select a game to start finding your perfect squad, or check your messages.</p>
+                <div class="dashboard-stats">
+                    <div class="stat-box"><h3>Online</h3><p>1,204 Players</p></div>
+                    <div class="stat-box"><h3>Matches Found</h3><p>842 Today</p></div>
+                </div>
             </section>
 
+            <!-- COUNTER-STRIKE -->
             <section id="cs-tab" class="tab-content">
                 <img src="img/csside.jpg" alt="CS Banner" class="game-banner">
-                <h1>Find Teammates in Counter-Strike</h1>
-                <p>Select your criteria to find the perfect squad for Premier or Faceit matches.</p>
+                <h1>Find CS Teammates</h1>
+                
+                <div class="filter-panel">
+                    <div class="input-group">
+                        <label>Game Mode</label>
+                        <select id="cs-mode" class="custom-select" onchange="updateCSFilters()">
+                            <option value="premier">Premier</option>
+                            <option value="faceit">Faceit</option>
+                            <option value="mm">Matchmaking</option>
+                        </select>
+                    </div>
+
+                    <!-- Динамічні фільтри для CS -->
+                    <div class="input-group" id="filter-premier">
+                        <label>Premier Rating</label>
+                        <select class="custom-select">
+                            <option>Any</option><option>0 - 4,999</option><option>5,000 - 9,999</option><option>10,000 - 14,999</option><option>15,000+</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="filter-faceit" style="display: none;">
+                        <label>Faceit Level</label>
+                        <select class="custom-select">
+                            <option>Any</option><option>Level 1-3</option><option>Level 4-7</option><option>Level 8-10</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="filter-mm" style="display: none;">
+                        <label>MM Rank</label>
+                        <select class="custom-select">
+                            <option>Any</option><option>Silver - Gold Nova</option><option>MG - DMG</option><option>LE - Global</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Server Region</label>
+                        <select class="custom-select"><option>EU West</option><option>EU East</option><option>NA</option></select>
+                    </div>
+                    
+                    <button class="search-btn" onclick="mockSearch('cs')">Search Players</button>
+                </div>
+                
+                <div id="cs-results" class="results-grid"></div>
             </section>
 
+            <!-- VALORANT -->
             <section id="val-tab" class="tab-content">
                 <img src="img/valoside.jpg" alt="Valorant Banner" class="game-banner">
-                <h1>Find Teammates in Valorant</h1>
-                <p>Search for specific agents like Main Duelist or Initiator to balance your team composition.</p>
+                <h1>Find Valorant Teammates</h1>
+                
+                <div class="filter-panel">
+                    <div class="input-group">
+                        <label>Rank</label>
+                        <select class="custom-select">
+                            <option>Iron - Bronze</option><option>Silver - Gold</option><option>Platinum - Diamond</option><option>Ascendant - Radiant</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Needed Role</label>
+                        <select class="custom-select">
+                            <option>Any</option><option>Duelist</option><option>Initiator</option><option>Controller</option><option>Sentinel</option>
+                        </select>
+                    </div>
+                    <button class="search-btn" onclick="mockSearch('val')">Search Players</button>
+                </div>
+
+                <div id="val-results" class="results-grid"></div>
+            </section>
+
+            <!-- ПОВІДОМЛЕННЯ (ЧАТ) -->
+            <section id="messages-tab" class="tab-content">
+                <h1>Your Messages</h1>
+                <div class="chat-container">
+                    <div class="chat-sidebar">
+                        <div class="chat-contact active">
+                            <div class="contact-avatar">S</div>
+                            <div class="contact-info">
+                                <h4>s1mple_fan</h4>
+                                <p>Ready for Faceit?</p>
+                            </div>
+                        </div>
+                        <div class="chat-contact">
+                            <div class="contact-avatar val-color">J</div>
+                            <div class="contact-info">
+                                <h4>JettMain99</h4>
+                                <p>Need a heal...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-window">
+                        <div class="chat-header">
+                            <h3>Chat with s1mple_fan</h3>
+                        </div>
+                        <div class="chat-messages" id="chat-box">
+                            <div class="msg-bubble received">Hey! Saw you are looking for a duo.</div>
+                            <div class="msg-bubble sent">Yeah, what Faceit lvl are you?</div>
+                            <div class="msg-bubble received">Lvl 8. Ready to play now?</div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="msg-input" placeholder="Type a message..." onkeypress="handleChatEnter(event)">
+                            <button onclick="sendMessage()" class="send-msg-btn">Send</button>
+                        </div>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
 
+    <!-- Модалки та налаштування залишаються (їх JS код скорочено для фронтенду) -->
     <aside class="right-sidebar" id="right-sidebar">
         <div class="sidebar-header">
-            <h3>Profile Settings</h3>
+            <h3>Settings</h3>
             <button class="close-btn" onclick="closeSettings()">✕</button>
         </div>
         <div class="settings-content">
             <div class="input-group">
-                <label>Upload Avatar</label>
-                <div class="custom-file-upload">
-                    <input type="file" id="photo-upload" accept="image/*" hidden>
-                    <label for="photo-upload" class="custom-file-btn">Choose File</label>
-                    <span id="file-name-display" class="file-name-text">No file chosen</span>
-                </div>
-            </div>
-            <div class="input-group">
-                <label for="change-nickname">New Nickname</label>
+                <label>New Nickname</label>
                 <input type="text" id="change-nickname" placeholder="Enter new nickname">
             </div>
-            <button class="submit-btn" onclick="saveSettings()">Save Changes</button>
+            <button class="submit-btn" onclick="saveSettings()">Save</button>
         </div>
     </aside>
 
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-box">
-            <div class="auth-tabs">
-                <button class="auth-tab active" id="tab-login" onclick="switchAuth('log')">Login</button>
-                <button class="auth-tab" id="tab-register" onclick="switchAuth('reg')">Register</button>
+            <h2>Mock Login</h2>
+            <p class="modal-subtitle">Frontend testing mode</p>
+            <div class="input-group">
+                <input type="text" id="dummy-nick" placeholder="Enter any nickname to test">
             </div>
-            
-            <h2 id="auth-title">Welcome Back</h2>
-            <p class="modal-subtitle" id="auth-subtitle">Login to access game lobbies</p>
-            
-            <form id="auth-form">
-                <div class="input-group" id="nick-group" style="display: none;">
-                    <label for="nickname">Nickname</label>
-                    <input type="text" id="nickname" placeholder="e.g., Nick">
-                </div>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="example@mail.com" required>
-                </div>
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
-                    <span id="error-msg" class="error-text"></span>
-                </div>
-                <button type="submit" class="submit-btn" id="submit-btn">Login & Enter</button>
-            </form>
+            <button class="submit-btn" onclick="mockLogin()">Enter Site</button>
         </div>
     </div>
 
