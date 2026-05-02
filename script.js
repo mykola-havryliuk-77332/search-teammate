@@ -3,8 +3,8 @@ let currentMode = 'reg';
 let pendingTabId = null;
 let pendingButton = null;
 
-// ПЕРЕВІР: Тут має бути твоє посилання БЕЗ "/" в кінці
-const API_URL = 'https://st-backend-production.up.railway.app';
+// ЗМІНЕНО: Тепер сайт відправляє дані на твій локальний сервер!
+const API_URL = 'http://localhost:3000';
 
 // Твій Telegram
 const TELEGRAM_TOKEN = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg';
@@ -56,7 +56,7 @@ function switchAuth(mode) {
     }
 }
 
-// ОСНОВНА ФУНКЦІЯ (ВИПРАВЛЕНА)
+// ОСНОВНА ФУНКЦІЯ
 document.getElementById('auth-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -104,7 +104,7 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
         }
     } catch (err) {
         if (errorEl) {
-            errorEl.textContent = "❌ Server error. Check Railway console!";
+            errorEl.textContent = "❌ Server error. Check backend console!";
             errorEl.style.display = 'block';
         }
     } finally {
