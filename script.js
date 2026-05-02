@@ -3,9 +3,12 @@ let currentMode = 'reg';
 let pendingTabId = null;
 let pendingButton = null;
 
-// Локальний сервер
-const API_URL = 'http://localhost:3000';
+// Твоя нова адреса бекенду на Railway
+const API_URL = 'https://havrs-finding-production.up.railway.app';
 
+/**
+ * Керування вкладками з перевіркою авторизації
+ */
 function handleTabClick(btnElement, tabId) {
     if (!isUserRegistered) {
         pendingTabId = tabId;
@@ -19,6 +22,7 @@ function handleTabClick(btnElement, tabId) {
 function openTab(btnElement, tabId) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active-tab'));
     document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+    
     const targetTab = document.getElementById(tabId);
     if (targetTab) {
         targetTab.classList.add('active-tab');
@@ -26,6 +30,9 @@ function openTab(btnElement, tabId) {
     }
 }
 
+/**
+ * Перемикання між Реєстрацією та Входом
+ */
 function switchAuth(mode) {
     currentMode = mode;
     const title = document.getElementById('auth-title');
@@ -52,24 +59,30 @@ function switchAuth(mode) {
     }
 }
 
-// ОСНОВНА ФУНКЦІЯ
+/**
+ * Обробка відправки форми (Реєстрація / Логін)
+ */
 document.getElementById('auth-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const nickname = document.getElementById('nickname') ? document.getElementById('nickname').value : "";
+    const nicknameInput = document.getElementById('nickname');
+    const nickname = nicknameInput ? nicknameInput.value : "";
     const errorEl = document.getElementById('error-msg');
     const submitBtn = document.getElementById('submit-btn');
 
     if (errorEl) errorEl.style.display = 'none';
     submitBtn.textContent = "Connecting...";
 
-    // БЕЗПЕЧНЕ СКЛЕЮВАННЯ URL
+    // Формуємо шлях: /register або /login
     const path = currentMode === 'reg' ? 'register' : 'login';
-    const finalUrl = API_URL + '/' + path;
+    const finalUrl = `${API_URL}/${path}`;
 
-    const body = currentMode === 'reg' ? { email, password, username: nickname } : { email, password };
+    // Формуємо дані для відправки
+    const body = currentMode === 'reg' 
+        ? { email, password, username: nickname } 
+        : { email, password };
 
     try {
         const res = await fetch(finalUrl, {
@@ -78,33 +91,56 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
             body: JSON.stringify(body)
         });
 
+        const data = await res.json();
+
         if (res.ok) {
-            const data = await res.json();
-            
+            // Успіх!
             isUserRegistered = true;
-            document.getElementById('player-display').innerHTML = `Player: <strong>${nickname || data.user?.username || "User"}</strong>`;
-            document.getElementById('settings-btn').style.display = 'inline-block';
+            
+            // Відображаємо нікнейм (або з форми, або той, що повернув сервер)
+            const displayName = nickname || data.user?.username || "Player";
+            const playerDisplay = document.getElementById('player-display');
+            if (playerDisplay) {
+                playerDisplay.innerHTML = `Player: <strong>${displayName}</strong>`;
+            }
+
+            // Показуємо кнопку налаштувань та закриваємо модалку
+            const settingsBtn = document.getElementById('settings-btn');
+            if (settingsBtn) settingsBtn.style.display = 'inline-block';
+            
             document.getElementById('auth-modal').style.display = 'none';
             
-            if (pendingTabId && pendingButton) openTab(pendingButton, pendingTabId);
+            // Якщо користувач хотів відкрити вкладку до реєстрації — відкриваємо її зараз
+            if (pendingTabId && pendingButton) {
+                openTab(pendingButton, pendingTabId);
+            }
+            
+            console.log("✅ Авторизація успішна:", data.message);
         } else {
-            const txt = await res.text();
+            // Помилка від сервера (наприклад, неправильний пароль)
             if (errorEl) {
-                errorEl.textContent = "❌ " + txt;
+                errorEl.textContent = "❌ " + (data.detail || "Error occurred");
                 errorEl.style.display = 'block';
             }
         }
     } catch (err) {
+        // Помилка з'єднання з сервером
         if (errorEl) {
-            errorEl.textContent = "❌ Server error. Check backend console!";
+            errorEl.textContent = "❌ Server is offline. Please try again later.";
             errorEl.style.display = 'block';
         }
+        console.error("Fetch error:", err);
     } finally {
         submitBtn.textContent = currentMode === 'reg' ? 'Register & Enter' : 'Login & Enter';
     }
 });
 
+/**
+ * Закриття модального вікна при кліку поза ним
+ */
 window.onclick = function(event) {
     const modal = document.getElementById('auth-modal');
-    if (event.target == modal) modal.style.display = 'none';
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
 };
